@@ -14,7 +14,6 @@ import {
 import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const columns = (handleUserStatus, setUserId, openModal) => [
@@ -35,23 +34,6 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
         <div className="flex items-center justify-start gap-2">
           <Badge variant={"outline"}>@{username}</Badge>
         </div>
-      );
-    },
-  },
-  {
-    accessorKey: "role",
-    header: ({ column }) => {
-      return <Button variant="ghost">ROLE</Button>;
-    },
-    cell: ({ row }) => {
-      const role = row.getValue("role");
-      return (
-        <Badge
-          variant={role === "doctor" ? "doctor" : "patient"}
-          className={cn("capitalize")}
-        >
-          {role}
-        </Badge>
       );
     },
   },

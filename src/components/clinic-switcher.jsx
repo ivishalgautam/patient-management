@@ -19,11 +19,11 @@ import {
 } from "@/components/ui/sidebar";
 import { ClinicContext } from "@/store/clinic-context";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { cn } from "@/lib/utils";
 
 export function ClinicSwitcher({ clinics }) {
   const { clinic, setClinic } = React.useContext(ClinicContext);
   const [localClinic, setLocalClinic] = useLocalStorage("clinic", clinic);
-
   const { isMobile } = useSidebar();
   const handleClinicChange = (clinic) => {
     setClinic(clinic);
@@ -60,19 +60,21 @@ export function ClinicSwitcher({ clinics }) {
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Clinics
             </DropdownMenuLabel>
-            {clinics.map((clinic, index) => (
+            {clinics.map((clnc, index) => (
               <DropdownMenuItem
-                key={clinic.name}
-                onClick={() => handleClinicChange(clinic)}
-                className="gap-2 p-2"
+                key={clnc.name}
+                onClick={() => handleClinicChange(clnc)}
+                className={cn("gap-2 p-2 hover:bg-gray-100", {
+                  "bg-gray-200": clinic.id == clnc.id,
+                })}
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
                   <Stethoscope size={5} className="shrink-0" />
                 </div>
                 <div className="flex flex-col items-start justify-start">
-                  <span className="text-xs">{clinic.name}</span>
+                  <span className="text-xs">{clnc.name}</span>
                   <span className="text-xs capitalize text-gray-500">
-                    {clinic.address}
+                    {clnc.address}
                   </span>
                 </div>
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

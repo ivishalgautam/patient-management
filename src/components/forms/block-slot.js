@@ -1,12 +1,10 @@
 "use client";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
-import Calendar from "../ui/calendar";
+import CustomCalendar from "../ui/custom-calendar";
 import { format, isSameDay, isToday, startOfToday } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { endpoints } from "@/utils/endpoints";
-import http from "@/utils/http";
 import moment from "moment";
 import { getByClinicId, getSlotByDateAndClinic } from "@/server/slot";
 import { fetchBlockSlotsByClinicId } from "@/server/block-slot";
@@ -90,7 +88,7 @@ export default function BlockSlotForm({ type, slots, clinic, handleCreate }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="md:grid md:grid-cols-2">
         <div className="">
-          <Calendar
+          <CustomCalendar
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
             slots={slots}

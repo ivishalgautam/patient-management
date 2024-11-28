@@ -37,7 +37,9 @@ export function AppSidebar({ ...props }) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        {isClinicLoading ? (
+        {user?.role === "admin" ? (
+          ""
+        ) : isClinicLoading ? (
           <Skeleton className={"h-12 bg-gray-800"}></Skeleton>
         ) : clinics ? (
           <ClinicSwitcher clinics={clinics} />

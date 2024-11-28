@@ -6,8 +6,22 @@ export async function fetchUsers(params) {
   return data;
 }
 
-export async function deleteUser(data) {
-  return http().delete(`${endpoints.users.getAll}/${data.id}`);
+export async function fetchPatients(params) {
+  const { data } = await http().get(
+    `${endpoints.users.getAll}/patients?${params}`,
+  );
+  return data;
+}
+
+export async function fetchPatientsByClinicId(clinicId, params) {
+  const { data } = await http().get(
+    `${endpoints.users.getAll}/patients/getByClinicId/${clinicId}?${params}`,
+  );
+  return data;
+}
+
+export async function deleteUser(id) {
+  return http().delete(`${endpoints.users.getAll}/${id}`);
 }
 
 export async function updateUser(data, userId) {

@@ -10,7 +10,7 @@ import { columns } from "../columns";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import {
   deleteUser,
-  fetchUsers,
+  fetchPatients,
   updateUser,
   updateUserStatus,
 } from "@/server/users";
@@ -33,8 +33,8 @@ export default function UserListing() {
   const searchParamsStr = searchParams.toString();
   const router = useRouter();
   const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryFn: () => fetchUsers(searchParamsStr),
-    queryKey: ["users", searchParamsStr],
+    queryFn: () => fetchPatients(searchParamsStr),
+    queryKey: ["patients", searchParamsStr],
     enabled: !!searchParamsStr,
   });
 
@@ -42,7 +42,7 @@ export default function UserListing() {
     mutationFn: ({ id }) => deleteUser(id),
     onSuccess: () => {
       toast.success("Customer deleted.");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
     },
     onError: (error) => {
       toast.error(error?.message ?? "error deleting!");
@@ -60,7 +60,7 @@ export default function UserListing() {
     try {
       const response = await updateUserStatus(customerId, status);
       toast.success(response?.message ?? "Status changed");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
     } catch (error) {
       // console.log(error);
     }
@@ -70,7 +70,7 @@ export default function UserListing() {
     mutationFn: (data) => updateUser(data, userId),
     onSuccess: (data) => {
       toast.success("Updated");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
       setIsModal(false);
     },
     onError: (error) => {

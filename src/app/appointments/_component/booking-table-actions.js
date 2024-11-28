@@ -1,17 +1,17 @@
 "use client";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
-import { useSlotTableFilters } from "./use-slot-table-filters";
+import { useBookingTableFilters } from "./use-booking-table-filters";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 
-export default function SlotActions() {
+export default function BookingActions() {
   const {
     resetFilters,
     searchQuery,
     setPage,
     setSearchQuery,
     isAnyFilterActive,
-  } = useSlotTableFilters();
+  } = useBookingTableFilters();
 
   return (
     <div className="my-3 flex flex-wrap items-center gap-4">

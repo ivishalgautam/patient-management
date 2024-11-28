@@ -26,6 +26,9 @@ export const endpoints = {
   slots: {
     getAll: "/slots",
   },
+  bookings: {
+    getAll: "/bookings",
+  },
   blockSlots: {
     getAll: "/block-slots",
     getByClinicId: "/block-slots/getByClinicId",

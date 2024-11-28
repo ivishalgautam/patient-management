@@ -45,7 +45,12 @@ export default function LoginForm() {
   }
 
   const onSubmit = async (data) => {
-    await loginUser(data);
+    const payload = {
+      username: String(data.username).trim(),
+      password: String(data.password).trim(),
+    };
+
+    await loginUser(payload);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">

@@ -39,23 +39,6 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     },
   },
   {
-    accessorKey: "role",
-    header: ({ column }) => {
-      return <Button variant="ghost">ROLE</Button>;
-    },
-    cell: ({ row }) => {
-      const role = row.getValue("role");
-      return (
-        <Badge
-          variant={role === "doctor" ? "doctor" : "patient"}
-          className={cn("capitalize")}
-        >
-          {role}
-        </Badge>
-      );
-    },
-  },
-  {
     accessorKey: "mobile_number",
     header: "PHONE",
   },
