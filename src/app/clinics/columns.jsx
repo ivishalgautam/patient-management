@@ -11,18 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import moment from "moment";
-import TableImage from "@/components/ui/table-image";
 import Link from "next/link";
 
-export const columns = (openModal, setProcedureId) => [
-  {
-    accessorKey: "image",
-    header: "IMAGE",
-    cell: (row) => {
-      const image = row.getValue("image");
-      return <TableImage src={image} />;
-    },
-  },
+export const columns = (openModal, setClinicId) => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -42,18 +33,8 @@ export const columns = (openModal, setProcedureId) => [
     },
   },
   {
-    accessorKey: "services",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          SERVICES
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "address",
+    header: "ADDRESS",
   },
   {
     accessorKey: "created_at",
@@ -83,12 +64,12 @@ export const columns = (openModal, setProcedureId) => [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link href={`/procedures/edit/${id}`}>Edit</Link>
+              <Link href={`/clinics/edit/${id}`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                setProcedureId(id);
+                setClinicId(id);
                 openModal();
               }}
             >

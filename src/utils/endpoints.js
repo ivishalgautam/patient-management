@@ -6,12 +6,16 @@ export const endpoints = {
     username: "/auth/username",
     verifyOtp: "/auth/verify",
   },
-
+  files: {
+    upload: "/upload/files",
+    getFiles: "/upload",
+  },
   profile: "/users/me",
   users: { getAll: "/users" },
   reports: { getAll: "/reports" },
   procedures: {
     getAll: "/procedures",
+    getOne: "/procedures/getById",
   },
   services: {
     getAll: "/services",

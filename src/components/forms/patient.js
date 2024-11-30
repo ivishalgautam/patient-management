@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { H5 } from "../ui/typography";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createUser } from "@/server/user";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon } from "lucide-react";
@@ -30,8 +30,10 @@ import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { patientSchema } from "@/validation-schemas/patient";
+import { fetchUser } from "@/server/users";
+import Spinner from "../Spinner";
 
-export default function PatientCreateForm() {
+export default function PatientCreateForm({ id, type }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -44,6 +46,12 @@ export default function PatientCreateForm() {
   } = useForm({
     resolver: zodResolver(patientSchema),
     defaultValues: { role: "patient" },
+  });
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryFn: () => fetchUser(id),
+    queryKey: [`patient-${id}`],
+    enabled: !!id && !!(type === "edit"),
   });
 
   const createMutation = useMutation({
@@ -67,6 +75,17 @@ export default function PatientCreateForm() {
     };
     createMutation.mutate(payload);
   };
+
+  useEffect(() => {
+    if (data) {
+      console.log({ data });
+    }
+  }, [data]);
+
+  if (type === "edit" && isLoading) return <Spinner />;
+  if (type === "edit" && isError)
+    return error?.message ?? "Error fetching user details!";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full py-6">
       <div className="w-full space-y-8">
@@ -182,6 +201,7 @@ export default function PatientCreateForm() {
                 type="password"
                 placeholder="Enter Password"
                 className=""
+                autoComplete="off"
               />
               {errors.password && (
                 <span className="text-red-500">{errors.password.message}</span>

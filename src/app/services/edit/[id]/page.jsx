@@ -1,24 +1,25 @@
 "use client";
+
 import ServiceForm from "@/components/forms/service";
 import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
-import { createService } from "@/server/service";
+import { updateService } from "@/server/service";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function ServiceCreatePage() {
+export default function ServiceEditPage({ params: { id } }) {
   const router = useRouter();
-  const createMutation = useMutation({
-    mutationFn: createService,
+  const updateMutation = useMutation({
+    mutationFn: (data) => updateService(id, data),
     onSuccess: () => router.replace("/services"),
     onError: (error) => toast.error(error?.message || "Error creating."),
   });
 
   return (
     <PageContainer>
-      <Heading title={"Create Service"} description={"Create service."} />
-      <ServiceForm createMutation={createMutation} />
+      <Heading title={"Edit Procedure"} description={"Edit procedure."} />
+      <ServiceForm updateMutation={updateMutation} type="edit" id={id} />
     </PageContainer>
   );
 }

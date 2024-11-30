@@ -6,6 +6,7 @@ import {
   User,
   Users,
 } from "lucide-react";
+import { LiaHospitalAltSolid } from "react-icons/lia";
 
 const ROLES = {
   ADMIN: "admin",
@@ -54,6 +55,18 @@ export const sidebarData = [
         roles: [ROLES.ADMIN, ROLES.DOCTOR],
         isVisible: true,
       },
+      {
+        title: "Edit Doctor",
+        url: "/users/edit/[id]/doctor",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
+      },
+      {
+        title: "Ediit Patient",
+        url: "/users/edit/[id]/patient",
+        roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        isVisible: false,
+      },
     ],
   },
   {
@@ -97,10 +110,16 @@ export const sidebarData = [
         isVisible: true,
       },
       {
-        title: "Add new",
+        title: "Create",
         url: "/procedures/create",
         roles: [ROLES.ADMIN],
         isVisible: true,
+      },
+      {
+        title: "Edit",
+        url: "/procedures/edit/[id]",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
       },
     ],
   },
@@ -118,7 +137,7 @@ export const sidebarData = [
         isVisible: true,
       },
       {
-        title: "Add New",
+        title: "Create",
         url: "/services/create",
         roles: [ROLES.ADMIN],
         isVisible: true,
@@ -151,7 +170,7 @@ export const sidebarData = [
         isVisible: true,
       },
       {
-        title: "Add New",
+        title: "Create",
         url: "/banners/create",
         roles: [ROLES.ADMIN],
         isVisible: true,
@@ -227,6 +246,33 @@ export const sidebarData = [
         url: "/appointments",
         roles: [ROLES.DOCTOR],
         isVisible: true,
+      },
+    ],
+  },
+  {
+    title: "Clinic",
+    url: "#",
+    icon: LiaHospitalAltSolid,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "My Clinics",
+        url: "/clinics",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Create Clinic",
+        url: "/clinics/create",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Edit Clinic",
+        url: "/clinics/edit/[id]",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
       },
     ],
   },

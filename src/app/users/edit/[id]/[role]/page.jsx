@@ -4,16 +4,16 @@ import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
 import React from "react";
 
-export default function Page({ params: { role } }) {
+export default function Page({ params: { id, role } }) {
   return (
     <PageContainer>
       <Heading
-        title={`Register ${role === "doctor" ? "Doctor" : role === "patient" ? "Patient" : ""}`}
+        title={`Edit ${role === "doctor" ? "Doctor" : role === "patient" ? "Patient" : ""}`}
       />
       {role === "doctor" ? (
-        <DoctorCreateForm type={"create"} />
+        <DoctorCreateForm id={id} type="edit" />
       ) : role === "patient" ? (
-        <PatientCreateForm type={"create"} />
+        <PatientCreateForm id={id} type="edit" />
       ) : (
         ""
       )}

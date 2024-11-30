@@ -1,6 +1,16 @@
 import { endpoints } from "@/utils/endpoints";
 import http from "@/utils/http";
 
+export async function createService(data) {
+  const resp = await http().post(`${endpoints.services.getAll}`, data);
+  return resp.data;
+}
+
+export async function updateService(id, data) {
+  const resp = await http().put(`${endpoints.services.getAll}/${id}`, data);
+  return resp.data;
+}
+
 export async function deleteService({ id }) {
   return await http().delete(`${endpoints.services.getAll}/${id}`);
 }

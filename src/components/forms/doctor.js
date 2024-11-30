@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { H5 } from "../ui/typography";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -7,11 +7,9 @@ import { Button } from "../ui/button";
 
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import PhoneInputWithCountrySelect, {
-  isValidPhoneNumber,
   parsePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -22,21 +20,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createUser } from "@/server/user";
 import { doctorSchema } from "@/validation-schemas/doctor";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 import { TagInput } from "emblor";
+import Spinner from "../Spinner";
+import { fetchUser } from "@/server/users";
+import axios from "axios";
+import { endpoints } from "@/utils/endpoints";
+import Image from "next/image";
+import useLocalStorage from "@/hooks/use-local-storage";
+import http from "@/utils/http";
 
-export default function DoctorCreateForm() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [tags, setTags] = useState([]);
-  const [activeTagIndex, setActiveTagIndex] = useState(null);
+export default function DoctorCreateForm({ id, type }) {
+  // const [loading, setLoading] = useState(false);
+  // const router = useRouter();
+  // const [tags, setTags] = useState([]);
+  // const [activeTagIndex, setActiveTagIndex] = useState(null);
+  const [token] = useLocalStorage("token", null);
   const {
     control,
     register,
@@ -48,7 +54,12 @@ export default function DoctorCreateForm() {
     resolver: zodResolver(doctorSchema),
     defaultValues: { role: "doctor" },
   });
-
+  const [image, setImage] = useState("");
+  const { data, isLoading, isError, error } = useQuery({
+    queryFn: () => fetchUser(id),
+    queryKey: [`doctor-${id}`],
+    enabled: !!id && !!(type === "edit"),
+  });
   const createMutation = useMutation({
     mutationKey: ["create-doctor"],
     mutationFn: createUser,
@@ -72,7 +83,76 @@ export default function DoctorCreateForm() {
     // return;
     createMutation.mutate(payload);
   };
-  console.log(watch("certification"));
+
+  useEffect(() => {
+    if (data) {
+      setValue("fullname", data.fullname);
+      setValue("gender", data.gender);
+      setValue("dob", data.dob);
+      setValue("username", data.username);
+      setValue("mobile_number", `+${data.country_code}${data.mobile_number}`);
+      setValue("email", data.email);
+      setValue("experience_years", data.details?.experience_years);
+      setValue("specialization", data.details?.specialization);
+    }
+  }, [data, setValue]);
+
+  const handleFileChange = async (event) => {
+    try {
+      const selectedFiles = event.target.files[0];
+      const formData = new FormData();
+      formData.append("file", selectedFiles);
+      console.log("formData=>", formData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.upload}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const file = response.data[0];
+
+      if (image) {
+        deleteFile(image).then((data) => {
+          setImage(file);
+          setValue("avatar", file);
+        });
+      } else {
+        setImage(file);
+        setValue("avatar", file);
+      }
+      if (type === "edit") {
+        handleUpdate({
+          avatar: file,
+        });
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+    }
+  };
+
+  const deleteFile = async (filePath) => {
+    try {
+      const resp = await http().delete(
+        `${endpoints.files.getFiles}?file_path=${filePath}`,
+      );
+
+      setImage("");
+      return true;
+    } catch (error) {
+      return toast.error(error?.message ?? "Error deleting image");
+    }
+  };
+
+  if (type === "edit" && isLoading) return <Spinner />;
+  if (type === "edit" && isError)
+    return error?.message ?? "Error fetching user details!";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full py-6">
       <div className="w-full space-y-8">
@@ -80,6 +160,52 @@ export default function DoctorCreateForm() {
         <div className="space-y-4">
           <H5>Basic Information</H5>
           <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-3">
+              <div className="space-y-4">
+                <div className="flex flex-col items-center justify-center">
+                  <Input
+                    type="file"
+                    placeholder="Select Image"
+                    {...register("image")}
+                    onChange={(e) => handleFileChange(e, "image")}
+                    multiple={false}
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                    className={`max-w-56`}
+                  />
+                  {errors.image && (
+                    <span className="text-sm text-red-500">
+                      {errors.image.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center justify-center gap-4 rounded-lg border border-dashed border-gray-300 p-8">
+                  {image ? (
+                    <figure className="relative size-32">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                        width={500}
+                        height={500}
+                        alt="image"
+                        className="h-full w-full"
+                        multiple={false}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => deleteFile(image)}
+                        className="absolute -right-2 -top-2"
+                        size="icon"
+                      >
+                        <Trash size={20} />
+                      </Button>
+                    </figure>
+                  ) : (
+                    <div>No file selected</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Fullname */}
             <div>
               <Label>Full Name</Label>
@@ -181,36 +307,42 @@ export default function DoctorCreateForm() {
             </div>
 
             {/* Password */}
-            <div>
-              <Label>Password</Label>
-              <Input
-                {...register("password")}
-                type="password"
-                placeholder="Enter Password"
-                className=""
-                autoComplete="off"
-              />
-              {errors.password && (
-                <span className="text-red-500">{errors.password.message}</span>
-              )}
-            </div>
+            {type === "create" && (
+              <div>
+                <Label>Password</Label>
+                <Input
+                  {...register("password")}
+                  type="password"
+                  placeholder="Enter Password"
+                  className=""
+                  autoComplete="off"
+                />
+                {errors.password && (
+                  <span className="text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* confirm Password */}
-            <div>
-              <Label>Password</Label>
-              <Input
-                {...register("confirm_password")}
-                type="password"
-                placeholder="Enter Confirm Password"
-                className=""
-                autoComplete="off"
-              />
-              {errors.confirm_password && (
-                <span className="text-red-500">
-                  {errors.confirm_password.message}
-                </span>
-              )}
-            </div>
+            {type === "create" && (
+              <div>
+                <Label>Password</Label>
+                <Input
+                  {...register("confirm_password")}
+                  type="password"
+                  placeholder="Enter Confirm Password"
+                  className=""
+                  autoComplete="off"
+                />
+                {errors.confirm_password && (
+                  <span className="text-red-500">
+                    {errors.confirm_password.message}
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* Mobile Number */}
             <div>
@@ -285,18 +417,8 @@ export default function DoctorCreateForm() {
               )}
             </div>
 
-            {/* Avatar */}
-            <div>
-              <Label>Avatar</Label>
-              <Input
-                {...register("avatar")}
-                placeholder="Avatar URL"
-                className=""
-              />
-            </div>
-
             {/* Certifications */}
-            <div className="col-span-3">
+            {/* <div className="col-span-3">
               <Label>Certifications</Label>
               <Controller
                 name="certification"
@@ -326,7 +448,7 @@ export default function DoctorCreateForm() {
                   );
                 }}
               />
-            </div>
+            </div> */}
           </div>
         </div>
 

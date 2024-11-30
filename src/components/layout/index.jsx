@@ -6,6 +6,7 @@ import { MainContext } from "@/store/context";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import ClinicContextProvider from "@/store/clinic-context";
+import { ScrollArea } from "../ui/scroll-area";
 
 const parentRoutes = sidebarData.map((item) => ({
   title: item.title,
@@ -63,7 +64,9 @@ export default function Layout({ children }) {
           <AppSidebar />
           <main className="w-full bg-gray-100">
             <SidebarTrigger />
-            <div className="px-2">{children}</div>
+            <ScrollArea className="h-[calc(100vh-30px)]">
+              <div className="px-2 pb-2">{children}</div>
+            </ScrollArea>
           </main>
         </SidebarProvider>
       </ClinicContextProvider>

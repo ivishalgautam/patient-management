@@ -80,8 +80,12 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
     return client.get(path).then((response) => response.data);
   }
 
-  function post(path, payload) {
-    return client.post(path, payload).then((response) => {
+  function post(path, payload, isFormData = false) {
+    let config = {};
+    if (isFormData) {
+      config.headers = { "Content-Type": "multipart/form-data" };
+    }
+    return client.post(path, payload, config).then((response) => {
       return response.data;
     });
   }

@@ -10,16 +10,22 @@ export const ClinicContext = createContext(null);
 function ClinicContextProvider({ children }) {
   const { user } = useContext(MainContext);
   const [clinic, setClinic] = useState({});
-  const { data: clinics, isLoading: isClinicLoading } = useQuery({
-    queryKey: [`clinics`, user],
+  const {
+    data: clinics,
+    isLoading: isClinicLoading,
+    refetch,
+  } = useQuery({
+    queryKey: [`clinics-context`, user],
     queryFn: async () => {
       const { data } = await http().get(endpoints.clinics.getAll);
       const localClinic = JSON.parse(localStorage.getItem("clinic"));
-      setClinic(
-        localClinic?.id
+
+      const clinicToSet =
+        localClinic.id && data.clinics.some((cl) => cl.id === localClinic.id)
           ? data.clinics?.find((so) => so.id === localClinic.id) ?? {}
-          : data.clinics?.[0] ?? {},
-      );
+          : data.clinics?.[0] ?? {};
+
+      setClinic(clinicToSet);
       return data.clinics;
     },
     enabled: !!user && !!(user.role === "doctor"),
@@ -31,6 +37,7 @@ function ClinicContextProvider({ children }) {
         clinic,
         setClinic,
         clinics,
+        refetchClinics: refetch,
         isClinicLoading,
       }}
     >

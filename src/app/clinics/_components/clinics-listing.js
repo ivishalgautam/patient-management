@@ -6,37 +6,40 @@ import { toast } from "sonner";
 import { DataTable } from "@/components/ui/table/data-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
-import { deleteProcedure, fetchProcedures } from "@/server/procedure";
+import { deleteService, fetchServices } from "@/server/service";
+import http from "@/utils/http";
+import { endpoints } from "@/utils/endpoints";
+import { deleteClinic, fetchClinics } from "@/server/clinic";
+import { ClinicDeleteDialog } from "./delete-dialog";
 
-export default function ProcedureListing() {
-  const [isModal, setIsModal] = useState(false);
-  const [reviewId, setProcedureId] = useState(null);
+export default function ClinicsListing() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [clinicId, setClinicId] = useState(null);
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const searchParamStr = searchParams.toString();
   const router = useRouter();
 
   function openModal() {
-    setIsModal(true);
+    setIsOpen(true);
   }
   function closeModal() {
-    setIsModal(false);
+    setIsOpen(false);
   }
 
-  const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryFn: () => fetchProcedures(searchParamStr),
-    queryKey: ["procedures", searchParamStr],
-    enabled: !!searchParamStr,
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [`clinics`],
+    queryFn: fetchClinics,
   });
 
-  const deleteMutation = useMutation(deleteProcedure, {
-    onSuccess: () => {
-      toast.success("Query deleted.");
-      queryClient.invalidateQueries(["procedures"]);
+  const deleteMutation = useMutation({
+    mutationFn: ({ id }) => deleteClinic(id),
+    onSuccess: (data) => toast.success("Clinic deleted"),
+    onError: (error) => toast.error(error?.message || "Error deleting."),
+    onSettled: () => {
       closeModal();
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message ?? error?.message ?? "error");
+      queryClient.invalidateQueries(["clinics"]);
+      queryClient.invalidateQueries(["clinics-context"]);
     },
   });
 
@@ -53,18 +56,17 @@ export default function ProcedureListing() {
     }
   }, [searchParamStr, router]);
 
-  if (isLoading || isFetching)
-    return <DataTableSkeleton columnCount={5} rowCount={10} />;
-
+  if (isLoading) return <DataTableSkeleton columnCount={5} rowCount={10} />;
   if (isError) error?.message ?? "error";
 
   return (
     <div className="rounded-lg border-input">
       <DataTable
-        columns={columns(openModal, setProcedureId)}
-        data={data.procedures}
+        columns={columns(openModal, setClinicId)}
+        data={data.clinics}
         totalItems={data.total}
       />
+      <ClinicDeleteDialog {...{ isOpen, setIsOpen, handleDelete, clinicId }} />
     </div>
   );
 }

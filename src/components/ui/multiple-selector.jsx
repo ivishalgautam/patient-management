@@ -187,7 +187,7 @@ const MultipleSelector = React.forwardRef(
           }
         }
       },
-      [handleUnselect, selected],
+      [handleUnselect, selected, inputRef],
     );
 
     useEffect(() => {
@@ -203,7 +203,7 @@ const MultipleSelector = React.forwardRef(
         document.removeEventListener("mousedown", handleClickOutside);
         document.removeEventListener("touchend", handleClickOutside);
       };
-    }, [open]);
+    }, [open, handleClickOutside]);
 
     useEffect(() => {
       if (value) {

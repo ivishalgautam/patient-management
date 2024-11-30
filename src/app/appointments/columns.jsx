@@ -13,9 +13,7 @@ import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { days } from "@/data/days";
 import { Edit } from "lucide-react";
-import { format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -23,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Controller } from "react-hook-form";
+import StatusDot from "@/components/ui/status-dot";
 
 export const columns = (handleStatus, handleDelete) => [
   {
@@ -64,27 +62,7 @@ export const columns = (handleStatus, handleDelete) => [
     cell: ({ row }) => {
       const value = row.getValue("status");
       const id = row.original.id;
-      return (
-        <Select
-          onValueChange={(value) => handleStatus(id, { status: value })}
-          defaultValue={value}
-        >
-          <SelectTrigger className="h-8">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            {[
-              { value: "pending", label: "Pending" },
-              { value: "canceled", label: "Cancel" },
-              { value: "completed", label: "Complete" },
-            ].map(({ value, label }) => (
-              <SelectItem key={value} value={value} className="capitalize">
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
+      return <StatusSelect {...{ id, value, handleStatus }} />;
     },
   },
   {
@@ -128,3 +106,53 @@ export const columns = (handleStatus, handleDelete) => [
     },
   },
 ];
+
+const statuses = [
+  {
+    value: "pending",
+    label: (
+      <span className="flex items-center gap-2">
+        <StatusDot className="text-amber-500" />
+        <span className="truncate">Pending</span>
+      </span>
+    ),
+  },
+  {
+    value: "canceled",
+    label: (
+      <span className="flex items-center gap-2">
+        <StatusDot className="text-gray-500" />
+        <span className="truncate">Cancelled</span>
+      </span>
+    ),
+  },
+  {
+    value: "completed",
+    label: (
+      <span className="flex items-center gap-2">
+        <StatusDot className="text-emerald-600" />
+        <span className="truncate">Completed</span>
+      </span>
+    ),
+  },
+];
+
+function StatusSelect({ id, value, handleStatus }) {
+  return (
+    <Select
+      onValueChange={(value) => handleStatus(id, { status: value })}
+      defaultValue={value}
+    >
+      <SelectTrigger className="h-8">
+        <SelectValue placeholder="Status" />
+      </SelectTrigger>
+      <SelectContent>
+        {statuses.map(({ value, label }) => (
+          <SelectItem key={value} value={value} className="capitalize">
+            {label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}

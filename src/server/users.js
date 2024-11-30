@@ -6,6 +6,11 @@ export async function fetchUsers(params) {
   return data;
 }
 
+export async function fetchUser(id) {
+  const { data } = await http().get(`${endpoints.users.getAll}/${id}`);
+  return data;
+}
+
 export async function fetchPatients(params) {
   const { data } = await http().get(
     `${endpoints.users.getAll}/patients?${params}`,

@@ -3,23 +3,23 @@
 import ProcedureForm from "@/components/forms/procedure";
 import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProcedure } from "@/server/procedure";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function ProcedureCreatePage() {
+export default function ProcedureEditPage({ params: { id } }) {
   const router = useRouter();
-
-  const createMutation = useMutation({
-    mutationFn: createProcedure,
+  const updateMutation = useMutation({
+    mutationFn: (data) => updateProcedure(id, data),
     onSuccess: () => router.replace("/procedures"),
     onError: (error) => toast.error(error?.message || "Error creating."),
   });
 
   return (
     <PageContainer>
-      <Heading title={"Create Procedure"} description={"Create procedure."} />
-      <ProcedureForm createMutation={createMutation} />
+      <Heading title={"Edit Procedure"} description={"Edit procedure."} />
+      <ProcedureForm updateMutation={updateMutation} type="edit" id={id} />
     </PageContainer>
   );
 }
