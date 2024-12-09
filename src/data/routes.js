@@ -1,0 +1,365 @@
+import {
+  FileText,
+  HandCoins,
+  LayoutDashboard,
+  ListChecks,
+  User,
+  Users,
+} from "lucide-react";
+import { LiaHospitalAltSolid } from "react-icons/lia";
+
+const ROLES = {
+  ADMIN: "admin",
+  PATIENT: "patient",
+  DOCTOR: "doctor",
+  USER: "user",
+};
+
+export const sidebarData = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    roles: [ROLES.ADMIN, ROLES.DOCTOR, ROLES.PATIENT],
+    isVisible: true,
+    items: [],
+  },
+  {
+    title: "User",
+    url: "#",
+    icon: Users,
+    roles: [ROLES.ADMIN],
+    isVisible: true,
+    items: [
+      {
+        title: "All Users",
+        url: "/users",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "My Patients",
+        url: "/users/my-patients",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Add Doctor",
+        url: "/users/create/doctor",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Add Patient",
+        url: "/users/create/patient",
+        roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Edit Doctor",
+        url: "/users/edit/[id]/doctor",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
+      },
+      {
+        title: "Edit Patient",
+        url: "/users/edit/[id]/patient",
+        roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Patients",
+    url: "#",
+    icon: Users,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "All Patients",
+        url: "/patients",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Add Patient",
+        url: "/users/create/patient",
+        roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        isVisible: true,
+      },
+    ],
+  },
+  {
+    title: "Treatments",
+    url: "#",
+    icon: Users,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "All Treatments",
+        url: "/treatments",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Patient details",
+        url: "/treatments/details/[id]",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Treatment plan",
+        url: "/treatments/details/[id]/treatment-plan",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Dental chart",
+        url: "/treatments/details/[id]/dental-chart",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Dental note",
+        url: "/treatments/details/[id]/dental-note",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Investigation",
+        url: "/treatments/details/[id]/investigation",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Payment",
+        url: "/treatments/details/[id]/payment",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Prescription",
+        url: "/treatments/details/[id]/prescription",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Procedures",
+    url: "#",
+    icon: FileText,
+    roles: [ROLES.ADMIN],
+    isVisible: true,
+    items: [
+      {
+        title: "All Procedures",
+        url: "/procedures",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Create",
+        url: "/procedures/create",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Edit",
+        url: "/procedures/edit/[id]",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Services",
+    url: "#",
+    icon: HandCoins,
+    roles: [ROLES.ADMIN, ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "All Services",
+        url: "/services",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Create",
+        url: "/services/create",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Edit",
+        url: "/services/edit/[id]",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
+      },
+      {
+        title: "My Services",
+        url: "/services/doctor",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Add Service",
+        url: "/services/doctor/create",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+    ],
+  },
+  {
+    title: "Banners",
+    url: "#",
+    icon: FileText,
+    roles: [ROLES.ADMIN],
+    isVisible: true,
+    items: [
+      {
+        title: "All Banners",
+        url: "/banners",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Create",
+        url: "/banners/create",
+        roles: [ROLES.ADMIN],
+        isVisible: true,
+      },
+      {
+        title: "Edit",
+        url: "/banners/edit/[id]",
+        roles: [ROLES.ADMIN],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Slots",
+    url: "#",
+    icon: FileText,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "My Slots",
+        url: "/slots",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Edit",
+        url: "/slots/edit/[id]",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Create",
+        url: "/slots/create",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Blocked Dates",
+        url: "/slots/blocked/dates",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Blocked Slots",
+        url: "/slots/blocked/slots",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Blocked Slots create",
+        url: "/slots/blocked/create/date",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Blocked Slots create",
+        url: "/slots/blocked/create/slot",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Blocked Slots edit",
+        url: "/slots/blocked/edit/[id]",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Appointments",
+    url: "#",
+    icon: ListChecks,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "My Appointments",
+        url: "/appointments",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Create Appointments",
+        url: "/appointments/create",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Clinic",
+    url: "#",
+    icon: LiaHospitalAltSolid,
+    roles: [ROLES.DOCTOR],
+    isVisible: true,
+    items: [
+      {
+        title: "My Clinics",
+        url: "/clinics",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Create Clinic",
+        url: "/clinics/create",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Edit Clinic",
+        url: "/clinics/edit/[id]",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+    ],
+  },
+  {
+    title: "Profile Overview",
+    url: "/profile",
+    icon: User,
+    roles: [ROLES.ADMIN, ROLES.PATIENT, ROLES.DOCTOR],
+    isVisible: true,
+    items: [],
+  },
+];
+
+export const publicRoutes = [
+  "/",
+  "/admin",
+  "/register",
+  "/reviews/create",
+  "/thank-you",
+  "/progress",
+];
