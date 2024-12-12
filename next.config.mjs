@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "api.infrakeys.com",
+        hostname: "hjv2pvkv-3001.inc1.devtunnels.ms",
         port: "",
       },
     ],

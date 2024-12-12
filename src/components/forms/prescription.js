@@ -105,7 +105,7 @@ export default function PrescriptionForm({
               {fields.map((item, ind) => (
                 <div
                   key={ind}
-                  className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 rounded-lg border p-4"
+                  className="flex flex-wrap items-center justify-start gap-2 rounded-lg border p-4"
                 >
                   {/* medicine name */}
                   <div>
@@ -128,7 +128,8 @@ export default function PrescriptionForm({
                     <Input
                       type="text"
                       {...register(`data.${ind}.dosage`)}
-                      placeholder="Enter dosage in mg"
+                      placeholder="Dosage"
+                      className="w-28"
                     />
                     {errors?.data?.[ind].dosage && (
                       <span className="text-sm text-red-500">
@@ -149,7 +150,10 @@ export default function PrescriptionForm({
                           value={field.value ?? ""}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select Frequency" />
+                            <SelectValue
+                              placeholder="Frequency"
+                              className="w-28"
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="morning">Morning</SelectItem>
@@ -174,7 +178,8 @@ export default function PrescriptionForm({
                       {...register(`data.${ind}.tablet_amount`, {
                         valueAsNumber: true,
                       })}
-                      placeholder="Enter tablet amount"
+                      placeholder="Amount"
+                      className="w-20"
                     />
                     {errors?.data?.[ind].tablet_amount && (
                       <span className="text-sm text-red-500">
@@ -191,7 +196,8 @@ export default function PrescriptionForm({
                       {...register(`data.${ind}.duration`, {
                         valueAsNumber: true,
                       })}
-                      placeholder="Enter duration"
+                      placeholder="Duration"
+                      className="w-20"
                     />
                     {errors?.data?.[ind].duration && (
                       <span className="text-sm text-red-500">
@@ -201,12 +207,13 @@ export default function PrescriptionForm({
                   </div>
 
                   {/* notes */}
-                  <div>
+                  <div className="flex-grow">
                     <Label>Notes</Label>
                     <Input
                       type="text"
                       {...register(`data.${ind}.notes`)}
                       placeholder="Enter notes"
+                      className="w-full"
                     />
                     {errors?.data?.[ind].notes && (
                       <span className="text-sm text-red-500">

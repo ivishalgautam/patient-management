@@ -9,36 +9,34 @@ export function useUserTableFilters() {
       .withOptions({ shallow: false, throttleMs: 1000 })
       .withDefault(""),
   );
-  const [username, setUsername] = useQueryState(
-    "username",
-    searchParams.q
-      .withOptions({ shallow: false, throttleMs: 1000 })
-      .withDefault(""),
-  );
 
   const [page, setPage] = useQueryState(
     "page",
     searchParams.page.withDefault(1),
   );
+  const [roleFilter, setRoleFilter] = useQueryState(
+    "role",
+    searchParams.role.withDefault(""),
+  );
 
   const resetFilters = useCallback(() => {
     setSearchQuery(null);
-    setUsername(null);
+    setRoleFilter(null);
 
     setPage(1);
-  }, [setUsername, setSearchQuery, setPage]);
+  }, [setSearchQuery, setRoleFilter, setPage]);
 
   const isAnyFilterActive = useMemo(() => {
-    return !!searchQuery || !!username;
-  }, [searchQuery, username]);
+    return !!searchQuery || !!roleFilter;
+  }, [searchQuery, roleFilter]);
 
   return {
     searchQuery,
     setSearchQuery,
-    username,
-    setUsername,
     page,
     setPage,
+    roleFilter,
+    setRoleFilter,
     resetFilters,
     isAnyFilterActive,
   };

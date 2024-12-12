@@ -14,6 +14,7 @@ function ClinicContextProvider({ children }) {
     data: clinics,
     isLoading: isClinicLoading,
     refetch,
+    isFetching,
   } = useQuery({
     queryKey: [`clinics-context`, user],
     queryFn: async () => {
@@ -27,8 +28,10 @@ function ClinicContextProvider({ children }) {
       setClinic(clinicToSet);
       return data.clinics;
     },
-    enabled: !!user && !!(user.role === "doctor"),
+    enabled: !!user && !!["doctor", "staff"].includes(user.role),
   });
+
+  console.log({ clinics, isClinicLoading, isFetching });
 
   return (
     <ClinicContext.Provider

@@ -33,7 +33,12 @@ import useFileHandler from "@/hooks/use-file-handler";
 import moment from "moment";
 import { userSchema, userUpdateSchema } from "@/validation-schemas/user";
 
-export default function UserForm({ id, type, updateMutation }) {
+export default function UserForm({
+  id,
+  type = "create",
+  updateMutation,
+  role = "doctor",
+}) {
   const {
     control,
     register,
@@ -42,7 +47,7 @@ export default function UserForm({ id, type, updateMutation }) {
     setValue,
   } = useForm({
     resolver: zodResolver(type === "create" ? userSchema : userUpdateSchema),
-    defaultValues: { role: "doctor" },
+    defaultValues: { role },
   });
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchUser(id),

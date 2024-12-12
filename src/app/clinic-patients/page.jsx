@@ -1,33 +1,33 @@
 import { Suspense } from "react";
-import { serialize, searchParamsCache } from "@/lib/searchparams";
+import UserTableActions from "./_component/user-table-actions";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
+import UserListing from "./_component/user-listing";
+import { searchParamsCache, serialize } from "@/lib/searchparams";
 import { Heading } from "@/components/ui/heading";
 import PageContainer from "@/components/layout/page-container";
-import ClinicTableActions from "./_components/table-actions";
-import Listing from "./_components/listing";
-import TableActions from "./_components/table-actions";
 
 export const metadata = {
-  title: "Investigations",
+  title: "All Patients",
 };
 
-export default async function TreatmentPlan({ searchParams, params: { id } }) {
+export default async function Users({ searchParams }) {
   searchParamsCache.parse(searchParams);
   const key = serialize({ ...searchParams });
+
   return (
     <PageContainer>
-      <Heading
-        title={"Investigations"}
-        description={"Manage Investigations (Create, Update, Delete)."}
-      />
-
-      {/* <TableActions /> */}
-
+      <div className="flex items-start justify-between">
+        <Heading
+          title="All Patients"
+          description="Manage Patients (Create, Update, Delete)."
+        />
+      </div>
+      <UserTableActions />
       <Suspense
         key={key}
         fallback={<DataTableSkeleton columnCount={4} rowCount={10} />}
       >
-        <Listing treatmentId={id} />
+        <UserListing />
       </Suspense>
     </PageContainer>
   );

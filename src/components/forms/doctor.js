@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { H5 } from "../ui/typography";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -51,6 +51,8 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
     ),
     defaultValues: { role: "doctor" },
   });
+  const [render, setRender] = useState(false);
+
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchUser(id),
     queryKey: [`doctor-${id}`],
@@ -87,7 +89,6 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
 
   useEffect(() => {
     if (data) {
-      console.log({ data });
       setValue("avatar", data.avatar);
       setImage(data.avatar);
       setValue("fullname", data.fullname);
@@ -99,8 +100,9 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
 
       setValue("experience_years", data.details?.experience_years);
       setValue("specialization", data.details?.specialization);
+      setRender(true);
     }
-  }, [data, setValue, setImage]);
+  }, [data, setValue, setImage, render, setRender]);
 
   const isButtonLoading =
     (type === "create" && createMutation.isLoading) ||
@@ -116,8 +118,8 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
         {/* basic info (user) */}
         <div className="space-y-4">
           <H5>Basic Information</H5>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-3">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+            <div className="col-span-full">
               <div className="space-y-4">
                 <div className="flex flex-col items-center justify-center">
                   <Input
@@ -194,12 +196,9 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
                 control={control}
                 name="gender"
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="">
-                      <SelectValue placeholder="Gender" />
+                      <SelectValue placeholder="Select a Gender" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="male">Male</SelectItem>
@@ -352,7 +351,7 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
         {/* doctor info*/}
         <div className="space-y-4">
           <H5>Doctor Information</H5>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {/* Specialization */}
             <div>
               <Label>Specialization</Label>

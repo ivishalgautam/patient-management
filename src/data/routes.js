@@ -13,6 +13,7 @@ const ROLES = {
   PATIENT: "patient",
   DOCTOR: "doctor",
   USER: "user",
+  STAFF: "staff",
 };
 
 export const sidebarData = [
@@ -38,12 +39,6 @@ export const sidebarData = [
         isVisible: true,
       },
       {
-        title: "My Patients",
-        url: "/users/my-patients",
-        roles: [ROLES.DOCTOR],
-        isVisible: true,
-      },
-      {
         title: "Add Doctor",
         url: "/users/create/doctor",
         roles: [ROLES.ADMIN],
@@ -53,6 +48,12 @@ export const sidebarData = [
         title: "Add Patient",
         url: "/users/create/patient",
         roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Add Staff",
+        url: "/users/create/staff",
+        roles: [ROLES.DOCTOR],
         isVisible: true,
       },
       {
@@ -70,22 +71,40 @@ export const sidebarData = [
     ],
   },
   {
-    title: "Patients",
+    title: "Users",
     url: "#",
     icon: Users,
-    roles: [ROLES.DOCTOR],
+    roles: [ROLES.DOCTOR, ROLES.STAFF],
     isVisible: true,
     items: [
       {
+        title: "Staff",
+        url: "/users/staff",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
+        title: "Clinic Staff",
+        url: "/users/clinic-staff",
+        roles: [ROLES.DOCTOR],
+        isVisible: true,
+      },
+      {
         title: "All Patients",
         url: "/patients",
-        roles: [ROLES.DOCTOR],
+        roles: [],
+        isVisible: true,
+      },
+      {
+        title: "Clinic Patients",
+        url: "/clinic-patients",
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: true,
       },
       {
         title: "Add Patient",
         url: "/users/create/patient",
-        roles: [ROLES.ADMIN, ROLES.DOCTOR],
+        roles: [ROLES.ADMIN, ROLES.DOCTOR, ROLES.STAFF],
         isVisible: true,
       },
     ],
@@ -301,19 +320,19 @@ export const sidebarData = [
     title: "Appointments",
     url: "#",
     icon: ListChecks,
-    roles: [ROLES.DOCTOR],
+    roles: [ROLES.DOCTOR, ROLES.STAFF],
     isVisible: true,
     items: [
       {
         title: "My Appointments",
         url: "/appointments",
-        roles: [ROLES.DOCTOR],
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: true,
       },
       {
         title: "Create Appointments",
         url: "/appointments/create",
-        roles: [ROLES.DOCTOR],
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: false,
       },
     ],
@@ -349,7 +368,7 @@ export const sidebarData = [
     title: "Profile Overview",
     url: "/profile",
     icon: User,
-    roles: [ROLES.ADMIN, ROLES.PATIENT, ROLES.DOCTOR],
+    roles: [ROLES.ADMIN, ROLES.STAFF, ROLES.DOCTOR],
     isVisible: true,
     items: [],
   },

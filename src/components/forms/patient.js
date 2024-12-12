@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { H5 } from "../ui/typography";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
@@ -28,13 +28,18 @@ import { CalendarIcon, Trash } from "lucide-react";
 // import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { patientSchema } from "@/validation-schemas/patient";
+import {
+  patientSchema,
+  patientUpdateSchema,
+} from "@/validation-schemas/patient";
 import { fetchUser } from "@/server/users";
 import Spinner from "../Spinner";
 import useFileHandler from "@/hooks/use-file-handler";
 import Image from "next/image";
 import { Calendar } from "../ui/calendar-eldora";
 import moment from "moment";
+import { useState } from "react";
+import { ClinicContext } from "@/store/clinic-context";
 
 export default function PatientCreateForm({ id, type, updateMutation }) {
   const {
@@ -44,9 +49,13 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
     formState: { errors },
     setValue,
   } = useForm({
-    resolver: zodResolver(patientSchema),
+    resolver: zodResolver(
+      type === "edit" ? patientUpdateSchema : patientSchema,
+    ),
     defaultValues: { role: "patient" },
   });
+  const { clinic } = useContext(ClinicContext);
+  const [render, setRender] = useState(false);
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchUser(id),
     queryKey: [`patient-${id}`],
@@ -70,8 +79,15 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
       ...data,
       country_code: countryCallingCode,
       mobile_number: nationalNumber,
+      clinic_id: clinic.id,
     };
-    createMutation.mutate(payload);
+
+    if (type === "create") {
+      createMutation.mutate(payload);
+    }
+    if (type === "edit") {
+      updateMutation.mutate(payload);
+    }
   };
 
   useEffect(() => {
@@ -90,8 +106,13 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
       setValue("height_in_cm", data.details.height_in_cm);
       setValue("marital_status", data.details.marital_status);
       setValue("source", data.details.source);
+      setRender(true);
     }
-  }, [data, setValue, setImage]);
+  }, [data, setValue, setImage, setRender, render]);
+
+  const isButtonLoading =
+    (type === "create" && createMutation.isLoading) ||
+    (type === "edit" && updateMutation.isLoading);
 
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError)
@@ -103,9 +124,9 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
         {/* basic info (user) */}
         <div className="space-y-4">
           <H5>Basic Information</H5>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {/* image */}
-            <div className="col-span-3 space-y-4">
+            <div className="col-span-full space-y-4">
               <div className="flex flex-col items-center justify-center">
                 <Input
                   type="file"
@@ -179,12 +200,9 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
                 control={control}
                 name="gender"
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="">
-                      <SelectValue placeholder="Gender" />
+                      <SelectValue placeholder="Select Gender" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="male">Male</SelectItem>
@@ -323,17 +341,36 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
         {/* patient info*/}
         <div className="space-y-4">
           <H5>Patient Information</H5>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {/* Blood Group */}
             <div>
               <Label>Blood Group</Label>
-              <Input
-                {...register("blood_group", {
-                  required: "Blood group is required.",
-                })}
-                placeholder="Enter Blood Group"
-                className=""
+              <Controller
+                control={control}
+                name={"blood_group"}
+                render={({ field }) => {
+                  return (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Blood Group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                          (item) => (
+                            <SelectItem
+                              key={item}
+                              value={String(item).toLowerCase()}
+                            >
+                              {item}
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
               />
+
               {errors.blood_group && (
                 <span className="text-red-500">
                   {errors.blood_group.message}
@@ -348,10 +385,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
                 control={control}
                 name="marital_status"
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Marital Status" />
                     </SelectTrigger>
@@ -389,12 +423,20 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
             {/* Emergency Contact */}
             <div>
               <Label>Emergency Contact</Label>
-              <Input
-                {...register("emergency_contact", {
-                  required: "Emergency contact is required.",
-                })}
-                placeholder="Enter Emergency Contact"
-                className=""
+              <Controller
+                control={control}
+                name="emergency_contact"
+                rules={{
+                  required: "required*",
+                }}
+                render={({ field }) => (
+                  <PhoneInputWithCountrySelect
+                    placeholder="Enter Emergency Contact"
+                    value={field.value}
+                    onChange={field.onChange}
+                    defaultCountry="IN"
+                  />
+                )}
               />
               {errors.emergency_contact && (
                 <span className="text-red-500">
@@ -404,22 +446,48 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
             </div>
 
             {/* Source */}
-            <div>
-              <Label>Source</Label>
-              <Input
-                {...register("source", { required: "Source is required." })}
-                placeholder="Enter Source"
-                className=""
-              />
-              {errors.source && (
-                <span className="text-red-500">{errors.source.message}</span>
-              )}
-            </div>
+            {type === "create" && (
+              <div>
+                <Label>Source</Label>
+                <Controller
+                  control={control}
+                  name="source"
+                  render={({ field }) => (
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select source" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Doctor", "Patient", "Others"].map((item) => (
+                          <SelectItem
+                            key={item}
+                            value={String(item).toLowerCase()}
+                          >
+                            {item}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.source && (
+                  <span className="text-red-500">{errors.source.message}</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="!mt-6 text-end">
-          <Button className="">Submit</Button>
+          <Button className="" disabled={isButtonLoading}>
+            Submit
+            {isButtonLoading && (
+              <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            )}
+          </Button>
         </div>
       </div>
     </form>

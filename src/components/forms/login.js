@@ -33,12 +33,20 @@ export default function LoginForm() {
       localStorage.setItem("user", JSON.stringify(response.user_data));
       localStorage.setItem("token", response.token);
       localStorage.setItem("refreshToken", response.refresh_token);
-      router.push("/dashboard");
+      if (response.user_data.role === "staff") {
+        router.push("/clinic-patients");
+      } else {
+        router.push("/dashboard");
+      }
       toast.success("Logged in.");
       return response.data;
     } catch (error) {
       // console.log(error);
-      toast.error(error?.message ?? "error while login!");
+      toast.error(
+        error?.response?.data?.message ??
+          error?.message ??
+          "error while login!",
+      );
     } finally {
       setLoading(false);
     }

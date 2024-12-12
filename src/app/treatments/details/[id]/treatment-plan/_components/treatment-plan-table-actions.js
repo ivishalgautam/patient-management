@@ -15,7 +15,7 @@ export default function TreatmentPlanTableActions() {
   return (
     <div className="my-3 flex flex-wrap items-center gap-4">
       <DataTableSearch
-        searchKey="name"
+        searchKey=""
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setPage={setPage}

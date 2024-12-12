@@ -1,21 +1,22 @@
 "use client";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
-import { useDentalNoteTableFilters } from "./use-dental-note-table-filters";
+import { useUserTableFilters } from "./use-user-table-filters";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
+import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 
-export default function DentalNoteTableActions() {
+export default function UserTableActions() {
   const {
-    isAnyFilterActive,
     resetFilters,
     searchQuery,
     setPage,
     setSearchQuery,
-  } = useDentalNoteTableFilters();
+    isAnyFilterActive,
+  } = useUserTableFilters();
 
   return (
     <div className="my-3 flex flex-wrap items-center gap-4">
       <DataTableSearch
-        searchKey=""
+        searchKey="name"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setPage={setPage}

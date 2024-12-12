@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useId, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,7 +10,8 @@ import { columns } from "../columns";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import {
   deleteUser,
-  fetchUsers,
+  fetchClinicPatients,
+  fetchPatients,
   updateUser,
   updateUserStatus,
 } from "@/server/users";
@@ -24,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { ClinicContext } from "@/store/clinic-context";
 
 export default function UserListing() {
   const [isModal, setIsModal] = useState(false);
@@ -32,17 +34,20 @@ export default function UserListing() {
   const searchParams = useSearchParams();
   const searchParamsStr = searchParams.toString();
   const router = useRouter();
+
+  const { clinic } = useContext(ClinicContext);
+
   const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryFn: () => fetchUsers(searchParamsStr),
-    queryKey: ["users", searchParamsStr],
-    enabled: !!searchParamsStr,
+    queryFn: () => fetchClinicPatients(clinic.id, searchParamsStr),
+    queryKey: ["patients", searchParamsStr, clinic?.id],
+    enabled: !!searchParamsStr && !!clinic?.id,
   });
 
   const deleteMutation = useMutation({
     mutationFn: ({ id }) => deleteUser(id),
     onSuccess: () => {
       toast.success("Customer deleted.");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
     },
     onError: (error) => {
       toast.error(error?.message ?? "error deleting!");
@@ -60,7 +65,7 @@ export default function UserListing() {
     try {
       const response = await updateUserStatus(customerId, status);
       toast.success(response?.message ?? "Status changed");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
     } catch (error) {
       // console.log(error);
     }
@@ -70,7 +75,7 @@ export default function UserListing() {
     mutationFn: (data) => updateUser(data, userId),
     onSuccess: (data) => {
       toast.success("Updated");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["patients"]);
       setIsModal(false);
     },
     onError: (error) => {

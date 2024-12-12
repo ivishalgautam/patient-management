@@ -18,6 +18,25 @@ export async function fetchPatients(params) {
   return data;
 }
 
+export async function fetchClinicPatients(clinicId, params) {
+  const { data } = await http().get(
+    `${endpoints.clinics.patientsByClinicId}/${clinicId}?${params}`,
+  );
+  return data;
+}
+
+export async function fetchStaff(params) {
+  const { data } = await http().get(`${endpoints.users.staff}?${params}`);
+  return data;
+}
+
+export async function fetchClinicStaff(clinicId, params) {
+  const { data } = await http().get(
+    `${endpoints.users.clinicStaff}/getByClinicId/${clinicId}?${params}`,
+  );
+  return data;
+}
+
 export async function searchPatients(params) {
   const { data } = await http().get(`${endpoints.patients.getAll}?q=${params}`);
   return data?.patients?.map((item) => ({

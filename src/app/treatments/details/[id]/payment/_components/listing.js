@@ -28,7 +28,7 @@ export default function Listing({ treatmentId }) {
   const router = useRouter();
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: [`payments-${treatmentId}`],
+    queryKey: [`payments-${treatmentId}`, searchParamStr],
     queryFn: () => fetchPayments(treatmentId, searchParamStr),
     enabled: !!treatmentId,
   });

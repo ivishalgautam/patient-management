@@ -11,7 +11,7 @@ export const endpoints = {
     getFiles: "/upload",
   },
   profile: "/users/me",
-  users: { getAll: "/users" },
+  users: { getAll: "/users", staff: "/staff", clinicStaff: "/clinic-staff" },
   patients: { getAll: "/patients" },
   clinicPatients: {
     getByClinic: "/clinic-patients/getByClinicId",
@@ -43,6 +43,8 @@ export const endpoints = {
   },
   clinics: {
     getAll: "/clinics",
+    patients: "/clinic-patients",
+    patientsByClinicId: "/clinic-patients/getByClinicId",
     addPatient: "/clinics/add-patient",
   },
   slots: {

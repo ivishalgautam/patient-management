@@ -25,7 +25,7 @@ export const userSchema = z
       .regex(/^[0-9A-Za-z]+$/, "Username must be alphanumeric."),
     password: z.string().min(1, { message: "Password is required." }),
     confirm_password: z.string().min(1, { message: "Password is required." }),
-    role: z.enum(["patient", "doctor", "admin"], {
+    role: z.enum(["patient", "doctor", "admin", "staff"], {
       message: "Role is required.",
     }),
     avatar: z.string().optional(),

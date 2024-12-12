@@ -73,7 +73,7 @@ function Reports({ data, isError, isLoading, error }) {
         icon={IndianRupee}
       />
       <Card
-        count={rupee.format(data?.today_collection)}
+        count={rupee.format(data?.total_collection)}
         title={"Total Collection"}
         icon={IndianRupee}
       />

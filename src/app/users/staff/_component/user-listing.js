@@ -10,6 +10,7 @@ import { columns } from "../columns";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import {
   deleteUser,
+  fetchStaff,
   fetchUsers,
   updateUser,
   updateUserStatus,
@@ -24,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { AssignClinicDialog } from "./assign-clinic-dialog";
 
 export default function UserListing() {
   const [isModal, setIsModal] = useState(false);
@@ -33,16 +35,16 @@ export default function UserListing() {
   const searchParamsStr = searchParams.toString();
   const router = useRouter();
   const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryFn: () => fetchUsers(searchParamsStr),
-    queryKey: ["users", searchParamsStr],
+    queryFn: () => fetchStaff(searchParamsStr),
+    queryKey: ["staff", searchParamsStr],
     enabled: !!searchParamsStr,
   });
 
   const deleteMutation = useMutation({
     mutationFn: ({ id }) => deleteUser(id),
     onSuccess: () => {
-      toast.success("Customer deleted.");
-      queryClient.invalidateQueries(["users"]);
+      toast.success("Staff deleted.");
+      queryClient.invalidateQueries(["staff"]);
     },
     onError: (error) => {
       toast.error(error?.message ?? "error deleting!");
@@ -100,14 +102,13 @@ export default function UserListing() {
     <div className="w-full rounded-lg border-input">
       <DataTable
         columns={columns(handleUserStatus, setUserId, () => setIsModal(true))}
-        data={data?.users}
+        data={data?.staff}
         totalItems={data?.total}
       />
-      <UserDeleteDialog
-        handleDelete={handleDelete}
+      <AssignClinicDialog
         isOpen={isModal}
         setIsOpen={setIsModal}
-        userId={userId}
+        staffId={userId}
       />
     </div>
   );
