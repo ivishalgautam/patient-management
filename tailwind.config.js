@@ -1,7 +1,7 @@
 import tailwindAnimate from "tailwindcss-animate";
 import tailwindTypography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
-modeule.exports = {
+module.exports = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
