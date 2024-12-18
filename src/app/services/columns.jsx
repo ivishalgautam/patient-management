@@ -15,7 +15,7 @@ import TableImage from "@/components/ui/table-image";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
-export const columns = (openModal, setServiceId) => [
+export const columns = (openModal, seId) => [
   {
     accessorKey: "image",
     header: "IMAGE",
@@ -93,8 +93,8 @@ export const columns = (openModal, setServiceId) => [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                setServiceId(id);
-                openModal();
+                seId(id);
+                openModal("delete");
               }}
             >
               Delete

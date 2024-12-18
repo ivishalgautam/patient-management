@@ -11,7 +11,7 @@ export async function updateService(id, data) {
   return resp.data;
 }
 
-export async function deleteService({ id }) {
+export async function deleteService(id) {
   return await http().delete(`${endpoints.services.getAll}/${id}`);
 }
 

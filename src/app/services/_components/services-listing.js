@@ -7,20 +7,21 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import { deleteService, fetchServices } from "@/server/service";
+import { DeleteDialog } from "./delete-dialog";
 
 export default function ServicesListing() {
-  const [isModal, setIsModal] = useState(false);
-  const [serviceId, setServiceId] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [id, setId] = useState(null);
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const searchParamStr = searchParams.toString();
   const router = useRouter();
 
   function openModal() {
-    setIsModal(true);
-  }
-  function closeModal() {
-    setIsModal(false);
+    if (!type) return toast.warning("Please provide which modal should open!");
+    if (type === "delete") {
+      setIsDeleteOpen(true);
+    }
   }
 
   const { data, isLoading, isFetching, isError, error } = useQuery({
@@ -29,11 +30,12 @@ export default function ServicesListing() {
     enabled: !!searchParamStr,
   });
 
-  const deleteMutation = useMutation(deleteService, {
+  const deleteMutation = useMutation({
+    mutationFn: ({ id }) => deleteService(id),
     onSuccess: () => {
       toast.success("Query deleted.");
       queryClient.invalidateQueries(["procedures"]);
-      closeModal();
+      setIsDeleteOpen(false);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message ?? error?.message ?? "error");
@@ -61,9 +63,18 @@ export default function ServicesListing() {
   return (
     <div className="rounded-lg border-input">
       <DataTable
-        columns={columns(openModal, setServiceId)}
+        columns={columns(openModal, setId)}
         data={data.services ?? []}
         totalItems={data.total ?? 0}
+      />
+
+      <DeleteDialog
+        {...{
+          isOpen: isDeleteOpen,
+          setIsOpen: setIsDeleteOpen,
+          handleDelete: () => handleDelete(id),
+          id,
+        }}
       />
     </div>
   );
