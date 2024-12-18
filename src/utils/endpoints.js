@@ -52,6 +52,7 @@ export const endpoints = {
   },
   bookings: {
     getAll: "/bookings",
+    getByDateAndClinic: "/bookings/getByDateAndClinic",
   },
   blockSlots: {
     getAll: "/block-slots",

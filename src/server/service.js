@@ -27,7 +27,7 @@ export async function fetchService(id) {
   return data;
 }
 
-export async function fetchFormattedServices(params) {
+export async function fetchFormattedServices(params = "") {
   const { data } = await http().get(`${endpoints.services.getAll}?${params}`);
   return (
     data?.services?.map(({ id: value, name: label }) => ({

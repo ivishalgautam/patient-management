@@ -2,10 +2,9 @@ import { endpoints } from "@/utils/endpoints";
 import http from "@/utils/http";
 
 export const getSlotByDateAndClinic = async (clinicId, day) => {
-  const { data } = await http().get(
+  return await http().get(
     `${endpoints.blockSlots.getByDateAndClinic}?clinic=${clinicId}&date=${day}`,
   );
-  return data;
 };
 
 export const getByClinicId = async (id) => {

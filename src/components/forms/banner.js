@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "../Spinner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import useFileHandler from "@/hooks/use-file-handler";
@@ -41,7 +41,7 @@ export default function BannerForm({
     resolver: zodResolver(bannerSchema),
     defaultValues: { url: "", type: "", is_featured: false },
   });
-
+  const [rerender, setRerender] = useState(false);
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchBanner(id),
     queryKey: [`banner-${id}`],
@@ -65,8 +65,9 @@ export default function BannerForm({
       setValue("is_featured", data.is_featured);
       setValue("type", data.type);
       setImage(data.url);
+      setRerender(true);
     }
-  }, [data, setValue, setImage]);
+  }, [data, setValue, setImage, setRerender, rerender]);
 
   const isButtonLoading =
     (type === "create" && createMutation.isLoading) ||
@@ -108,18 +109,27 @@ export default function BannerForm({
 
               <div className="flex items-center justify-center gap-4 rounded-lg border border-dashed border-gray-300 p-8">
                 {image ? (
-                  <figure className="relative size-32">
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
-                      width={500}
-                      height={500}
-                      alt="image"
-                      className="h-full w-full"
-                      priority={true}
-                      onError={() => {
-                        setImage(null);
-                      }}
-                    />
+                  <figure className="relative size-64">
+                    {watch("type") === "banner" ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                        width={200}
+                        height={200}
+                        alt="image"
+                        className="h-full w-full"
+                        priority={true}
+                        onError={() => {
+                          setImage(null);
+                        }}
+                      />
+                    ) : (
+                      <video
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                        controls
+                        width={640}
+                        height={480}
+                      ></video>
+                    )}
                     <Button
                       type="button"
                       variant="destructive"
@@ -171,10 +181,7 @@ export default function BannerForm({
                 name="type"
                 control={control}
                 render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a type" />
                     </SelectTrigger>

@@ -42,7 +42,6 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
     queryFn: () => getSlotByDateAndClinic(clinic.id, formattedSelectedDay),
     enabled: !!clinic.id,
   });
-
   const { data: allBlockSlots, isLoading: isBlockSlotsLoading } = useQuery({
     queryFn: () => fetchBlockSlotsByClinicId("", "", clinic.id),
     queryKey: [`all-block-slots-${clinic.id}`, clinic?.id],
@@ -196,13 +195,16 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
                         variant={
                           selectedSlot === slot
                             ? "default"
-                            : blockedSlots?.slots?.includes(slot)
+                            : blockedSlots?.data?.slots?.includes(slot)
                               ? "destructive"
-                              : "outline"
+                              : blockedSlots?.booked?.includes(slot)
+                                ? "secondary"
+                                : "outline"
                         }
                         className={cn("cursor-pointer px-4 py-2", {
                           "pointer-events-none":
-                            blockedSlots?.slots?.includes(slot),
+                            blockedSlots?.data?.slots?.includes(slot) ||
+                            blockedSlots?.booked?.includes(slot),
                         })}
                         onClick={() => setValue("slot", slot)}
                       >

@@ -103,12 +103,6 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => handleAddToTreatment(patientId, id)}
-            >
-              Add to treatment
-            </DropdownMenuItem>
             {/* <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => handleDelete({ id })}>
               Delete

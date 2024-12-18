@@ -33,6 +33,7 @@ import { fetchUser } from "@/server/users";
 import Image from "next/image";
 import useFileHandler from "@/hooks/use-file-handler";
 import moment from "moment";
+import { Textarea } from "../ui/textarea";
 
 export default function DoctorCreateForm({ id, type, updateMutation }) {
   // const [loading, setLoading] = useState(false);
@@ -100,6 +101,7 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
 
       setValue("experience_years", data.details?.experience_years);
       setValue("specialization", data.details?.specialization);
+      setValue("about", data.details?.about);
       setRender(true);
     }
   }, [data, setValue, setImage, render, setRender]);
@@ -380,6 +382,20 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
                 <span className="text-red-500">
                   {errors.experience_years.message}
                 </span>
+              )}
+            </div>
+
+            {/* About */}
+            <div>
+              <Label>About</Label>
+              <Textarea
+                {...register("about")}
+                type="number"
+                placeholder="Enter About"
+                className=""
+              />
+              {errors.about && (
+                <span className="text-red-500">{errors.about.message}</span>
               )}
             </div>
 

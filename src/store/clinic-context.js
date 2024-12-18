@@ -31,8 +31,6 @@ function ClinicContextProvider({ children }) {
     enabled: !!user && !!["doctor", "staff"].includes(user.role),
   });
 
-  console.log({ clinics, isClinicLoading, isFetching });
-
   return (
     <ClinicContext.Provider
       value={{

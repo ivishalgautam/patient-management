@@ -11,7 +11,6 @@ import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import { ClinicContext } from "@/store/clinic-context";
 import { deleteSlotById } from "@/server/slot";
 import { fetchBookingsByClinicId, updateBookingStatus } from "@/server/booking";
-import { addToTreatment } from "@/server/clinic";
 
 export default function BookingsListing() {
   const router = useRouter();
@@ -19,10 +18,9 @@ export default function BookingsListing() {
   const searchParams = useSearchParams();
   const searchParamsStr = searchParams.toString();
   const { clinic } = useContext(ClinicContext);
-
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: [`bookings-${clinic.id}`],
-    queryFn: () => fetchBookingsByClinicId(clinic.id),
+    queryKey: [`bookings-${clinic.id}`, searchParamsStr],
+    queryFn: () => fetchBookingsByClinicId(searchParamsStr, clinic.id),
     enabled: !!clinic.id,
   });
 
@@ -36,55 +34,35 @@ export default function BookingsListing() {
     },
   });
 
-  const addToTreatmentMutation = useMutation({
-    mutationFn: ({ patientId, appointmentId }) =>
-      addToTreatment({
-        clinic_id: clinic.id,
-        patient_id: patientId,
-        appointment_id: appointmentId,
-      }),
-    onError: (error) => {
-      toast.error(error?.message ?? "error deleting!");
-    },
-    onSuccess: (data) => {
-      toast.success(data?.message ?? "Added");
-    },
-  });
-
-  const handleAddToTreatment = (patientId, appointmentId) => {
-    addToTreatmentMutation.mutate({ patientId, appointmentId });
-  };
-
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, data }) => updateBookingStatus(id, data),
     onSuccess: () => {
       toast.success("Slot updated.");
     },
-    onError: (error) => {
-      toast.error(error?.message ?? "error deleting!");
-    },
     onMutate: (currData) => {
       // console.log({ currData });
       const prevData = queryClient.getQueryData([`bookings-${clinic.id}`]);
-      queryClient.setQueryData([`bookings-${clinic.id}`], (old) => {
-        return {
-          ...old,
-          bookings: old.bookings.map((b) =>
-            b.id === currData.id ? { ...b, ...currData.data } : b,
-          ),
-        };
-      });
+      queryClient.setQueryData(
+        [`bookings-${clinic.id}`, searchParamsStr],
+        (old) => {
+          return {
+            ...old,
+            bookings: old.bookings.map((b) =>
+              b.id === currData.id ? { ...b, ...currData.data } : b,
+            ),
+          };
+        },
+      );
 
       return prevData;
     },
-    onError: (err, newData, context) => {
-      queryClient.setQueryData(
-        [`bookings-${clinic.id}`],
-        context.previousTodos,
-      );
+    onError: (err) => {
+      toast.error(err?.message ?? "error updating!");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [`bookings-${clinic.id}`] });
+      queryClient.invalidateQueries({
+        queryKey: [`bookings-${clinic.id}`],
+      });
     },
   });
 
@@ -113,7 +91,7 @@ export default function BookingsListing() {
   return (
     <div className="w-full rounded-lg border-input">
       <DataTable
-        columns={columns(handleStatus, handleDelete, handleAddToTreatment)}
+        columns={columns(handleStatus, handleDelete)}
         data={data?.bookings ?? []}
         totalItems={data?.total ?? 0}
       />
