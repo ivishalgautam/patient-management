@@ -12,6 +12,16 @@ const nextConfig = {
         hostname: "hjv2pvkv-3001.inc1.devtunnels.ms",
         port: "",
       },
+      {
+        protocol: "http",
+        hostname: "46.28.44.24",
+        port: "/public/*",
+      },
+      {
+        protocol: "https",
+        hostname: "api.drdiptismilesuite.com",
+        port: "/public/*",
+      },
     ],
   },
 };
