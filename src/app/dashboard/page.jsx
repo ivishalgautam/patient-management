@@ -16,30 +16,58 @@ const getReports = async (clinicId) => {
   return data ?? {};
 };
 
+const getAdminReports = async () => {
+  const { data } = await http().get(`${endpoints.reports.getAll}`);
+  return data ?? {};
+};
+
 export default function Home() {
   const { clinic } = useContext(ClinicContext);
+  const { user } = useContext(MainContext);
   const {
-    data: report = {},
-    isLoading: isReportLoading,
-    isError: isReportError,
-    error: reportError,
+    data: doctorReport = {},
+    isLoading: isDoctorReportLoading,
+    isError: isDoctorReportError,
+    error: doctorReportError,
   } = useQuery({
     queryKey: ["reports", clinic?.id],
     queryFn: () => getReports(clinic.id),
-    enabled: !!clinic?.id,
+    enabled: !!clinic.id,
+  });
+  const {
+    data: adminReport = {},
+    isLoading: isAdminReportLoading,
+    isError: isAdminReportError,
+    error: adminReportError,
+  } = useQuery({
+    queryKey: ["admin-reports"],
+    queryFn: getAdminReports,
+    enabled: !!(user?.role === "admin"),
   });
 
   return (
     <PageContainer className={"space-y-4 bg-white"}>
       <Heading title={"Dashboard"} description={"Dashboard reports"} />
-      <Reports
-        {...{
-          data: report,
-          isError: isReportError,
-          isLoading: isReportLoading,
-          error: reportError,
-        }}
-      />
+      {user?.role === "doctor" && (
+        <Reports
+          {...{
+            data: doctorReport,
+            isError: isDoctorReportError,
+            isLoading: isDoctorReportLoading,
+            error: doctorReportError,
+          }}
+        />
+      )}
+      {user?.role === "admin" && (
+        <Reports
+          {...{
+            data: adminReport,
+            isError: isAdminReportError,
+            isLoading: isAdminReportLoading,
+            error: adminReportError,
+          }}
+        />
+      )}
     </PageContainer>
   );
 }
