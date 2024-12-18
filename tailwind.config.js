@@ -1,8 +1,7 @@
-import { keepTheme } from "keep-react/keepTheme";
 import tailwindAnimate from "tailwindcss-animate";
 import tailwindTypography from "@tailwindcss/typography";
 /** @type {import('tailwindcss').Config} */
-const config = {
+modeule.exports = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -100,5 +99,3 @@ const config = {
   },
   plugins: [tailwindAnimate, tailwindTypography],
 };
-
-export default keepTheme(config);
