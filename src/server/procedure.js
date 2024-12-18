@@ -11,7 +11,7 @@ export async function updateProcedure(id, data) {
   return resp.data;
 }
 
-export async function deleteProcedure({ id }) {
+export async function deleteProcedure(id) {
   return await http().delete(`${endpoints.procedures.getAll}/${id}`);
 }
 

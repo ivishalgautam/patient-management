@@ -7,20 +7,21 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import { deleteProcedure, fetchProcedures } from "@/server/procedure";
+import { DeleteDialog } from "./delete-dialog";
 
 export default function ProcedureListing() {
-  const [isModal, setIsModal] = useState(false);
-  const [reviewId, setProcedureId] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [id, setId] = useState(null);
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const searchParamStr = searchParams.toString();
   const router = useRouter();
 
-  function openModal() {
-    setIsModal(true);
-  }
-  function closeModal() {
-    setIsModal(false);
+  function openModal(type) {
+    if (!type) return toast.warning("Please provide which modal should open!");
+    if (type === "delete") {
+      setIsDeleteOpen(true);
+    }
   }
 
   const { data, isLoading, isFetching, isError, error } = useQuery({
@@ -29,11 +30,12 @@ export default function ProcedureListing() {
     enabled: !!searchParamStr,
   });
 
-  const deleteMutation = useMutation(deleteProcedure, {
+  const deleteMutation = useMutation({
+    mutationFn: ({ id }) => deleteProcedure(id),
     onSuccess: () => {
       toast.success("Query deleted.");
       queryClient.invalidateQueries(["procedures"]);
-      closeModal();
+      setIsDeleteOpen(false);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message ?? error?.message ?? "error");
@@ -57,13 +59,21 @@ export default function ProcedureListing() {
     return <DataTableSkeleton columnCount={5} rowCount={10} />;
 
   if (isError) error?.message ?? "error";
-
   return (
     <div className="rounded-lg border-input">
       <DataTable
-        columns={columns(openModal, setProcedureId)}
+        columns={columns(openModal, setId)}
         data={data.procedures}
         totalItems={data.total}
+      />
+
+      <DeleteDialog
+        {...{
+          isOpen: isDeleteOpen,
+          setIsOpen: setIsDeleteOpen,
+          handleDelete: () => handleDelete(id),
+          id,
+        }}
       />
     </div>
   );

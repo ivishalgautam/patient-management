@@ -14,7 +14,7 @@ import moment from "moment";
 import TableImage from "@/components/ui/table-image";
 import Link from "next/link";
 
-export const columns = (openModal, setProcedureId) => [
+export const columns = (openModal, setId) => [
   {
     accessorKey: "image",
     header: "IMAGE",
@@ -88,8 +88,8 @@ export const columns = (openModal, setProcedureId) => [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                setProcedureId(id);
-                openModal();
+                setId(id);
+                openModal("delete");
               }}
             >
               Delete
