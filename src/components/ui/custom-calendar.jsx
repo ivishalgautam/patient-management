@@ -73,7 +73,7 @@ export default function CustomCalendar({
         isEqual(format(day, "yyyy-MM-dd"), d.date),
       );
     },
-    [selectedDay],
+    [blockedDates],
   );
 
   return (
