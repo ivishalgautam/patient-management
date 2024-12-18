@@ -103,14 +103,14 @@ export default function LoginForm() {
             </Button>
           </div>
 
-          <div className="translate-y-4">
+          {/* <div className="translate-y-4">
             <P className={"text-center text-sm font-medium tracking-wide"}>
               Do not have an account?{" "}
               <Link href={"/register"} className="text-primary">
                 Create one
               </Link>
             </P>
-          </div>
+          </div> */}
         </div>
       </div>
     </form>
