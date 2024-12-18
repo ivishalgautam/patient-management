@@ -1,3 +1,5 @@
+import { keepTheme } from "keep-react/keepTheme";
+
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: ["class"],
@@ -95,7 +97,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate")],
 };
 
-export default config;
+export default keepTheme(config);
