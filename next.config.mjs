@@ -15,12 +15,14 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "46.28.44.24",
-        port: "/public/*",
+        port: "",
+        pathname: "/public/*",
       },
       {
         protocol: "https",
         hostname: "api.drdiptismilesuite.com",
-        port: "/public/*",
+        port: "",
+        pathname: "/public/*",
       },
     ],
   },
