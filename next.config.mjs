@@ -14,8 +14,8 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "46.28.44.24:3000",
-        port: "",
+        hostname: "46.28.44.24",
+        port: "3000",
         pathname: "/public/*",
       },
       {
