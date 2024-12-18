@@ -68,7 +68,7 @@ export default function BannerForm({
       setRerender(true);
     }
   }, [data, setValue, setImage, setRerender, rerender]);
-
+  //
   const isButtonLoading =
     (type === "create" && createMutation.isLoading) ||
     (type === "edit" && updateMutation.isLoading);
