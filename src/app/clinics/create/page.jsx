@@ -8,7 +8,7 @@ export default function ClinicCreatePage() {
   return (
     <PageContainer>
       <Heading title={"Create Clinic"} description={"Create clinic."} />
-      <ClinicForm />
+      <ClinicForm type="create" />
     </PageContainer>
   );
 }

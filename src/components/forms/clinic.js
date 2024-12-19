@@ -14,7 +14,7 @@ import Spinner from "../Spinner";
 import { useEffect } from "react";
 import { clinicSchema } from "@/validation-schemas/clinic";
 
-export default function ClinicForm({ type, id, updateMutation }) {
+export default function ClinicForm({ type = "create", id, updateMutation }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const {
@@ -25,7 +25,6 @@ export default function ClinicForm({ type, id, updateMutation }) {
   } = useForm({
     resolver: zodResolver(clinicSchema),
   });
-
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchClinic(id),
     queryKey: [`clinic-${id}`],
@@ -40,6 +39,7 @@ export default function ClinicForm({ type, id, updateMutation }) {
   });
 
   const onSubmit = async (data) => {
+    console.log({ data });
     const payload = {
       name: data.name,
       address: data.address,
