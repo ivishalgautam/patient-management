@@ -56,7 +56,7 @@ export default function BlockSlotForm({ type, slots, clinic, handleCreate }) {
   });
   useEffect(() => {
     if (blockedSlots) {
-      setValue("slots", blockedSlots?.slots ?? []);
+      setValue("slots", blockedSlots?.data?.slots ?? []);
     }
   }, [blockedSlots, setValue]);
 
