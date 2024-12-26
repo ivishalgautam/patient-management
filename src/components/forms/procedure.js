@@ -66,7 +66,7 @@ export default function ProcedureForm({
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError) return error?.message ?? "error";
   const isButtonLoading =
-    createMutation.isLoading || (type === "edit" && updateMutation.isLoading);
+    createMutation?.isLoading || (type === "edit" && updateMutation?.isLoading);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <div className="mx-auto flex items-center justify-start">
