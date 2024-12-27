@@ -42,15 +42,15 @@ export default function PatientDetailsPage({ params: { id } }) {
               <Muted>Full Name:</Muted> {data.fullname}
             </div>
             <div className="capitalize">
-              <Muted>Contact:</Muted> {data.mobile_number},
+              <Muted>Contact:</Muted> {data.mobile_number}, &nbsp;
               {data?.emergency_contact}
             </div>
-            <div className="capitalize">
+            {/* <div className="capitalize">
               <Muted>Cost:</Muted> {rupee.format(data.cost ?? 0)}
             </div>
             <div className="capitalize">
               <Muted>Balance:</Muted> {rupee.format(data?.balance ?? 0)}
-            </div>
+            </div> */}
           </div>
         </div>
       )}
