@@ -6,9 +6,6 @@ import { toast } from "sonner";
 import { DataTable } from "@/components/ui/table/data-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
-import { deleteService, fetchServices } from "@/server/service";
-import http from "@/utils/http";
-import { endpoints } from "@/utils/endpoints";
 import { deleteClinic, fetchClinics } from "@/server/clinic";
 import { ClinicDeleteDialog } from "./delete-dialog";
 
@@ -66,7 +63,14 @@ export default function ClinicsListing() {
         data={data.clinics}
         totalItems={data.total}
       />
-      <ClinicDeleteDialog {...{ isOpen, setIsOpen, handleDelete, clinicId }} />
+      <ClinicDeleteDialog
+        {...{
+          isOpen,
+          setIsOpen,
+          handleDelete: () => handleDelete(clinicId),
+          clinicId,
+        }}
+      />
     </div>
   );
 }

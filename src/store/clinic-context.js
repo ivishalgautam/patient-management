@@ -31,6 +31,8 @@ function ClinicContextProvider({ children }) {
     enabled: !!user && !!["doctor", "staff"].includes(user.role),
   });
 
+  console.log({ clinics });
+
   return (
     <ClinicContext.Provider
       value={{
