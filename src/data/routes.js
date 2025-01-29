@@ -403,6 +403,5 @@ export const publicRoutes = [
   "/admin",
   "/register",
   "/reviews/create",
-  "/thank-you",
   "/progress",
 ];
