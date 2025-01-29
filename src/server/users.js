@@ -25,6 +25,10 @@ export async function fetchClinicPatients(clinicId, params) {
   return data;
 }
 
+export async function deleteClinicPatient(id) {
+  return await http().delete(`${endpoints.clinics.patients}/${id}`);
+}
+
 export async function fetchStaff(params) {
   const { data } = await http().get(`${endpoints.users.staff}?${params}`);
   return data;

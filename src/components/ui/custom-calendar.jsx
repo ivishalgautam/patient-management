@@ -146,8 +146,8 @@ export default function CustomCalendar({
                   isDateBlocked(day) &&
                     "pointer-events-none cursor-not-allowed bg-red-200",
                   isDayOff(day) &&
-                    "pointer-events-none cursor-not-allowed !text-red-500",
-                  isBefore(day, today) && "pointer-events-none !text-gray-300",
+                    "pointer-events-none cursor-not-allowed text-red-500!",
+                  isBefore(day, today) && "pointer-events-none text-gray-300!",
                   "relative mx-auto flex h-8 w-8 items-center justify-center rounded-full",
                 )}
               >

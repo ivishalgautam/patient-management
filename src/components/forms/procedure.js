@@ -156,7 +156,7 @@ export default function ProcedureForm({
           </div>
 
           {/* seo */}
-          <Large className={"!mt-10"}>Seo</Large>
+          <Large className={"mt-10!"}>Seo</Large>
           <div className="grid grid-cols-2 gap-4">
             {/* Meta Title */}
             <div>
@@ -186,7 +186,7 @@ export default function ProcedureForm({
             </div>
           </div>
 
-          <div className="!mt-6 text-end">
+          <div className="mt-6! text-end">
             <Button className="" disabled={isButtonLoading}>
               Submit
               {isButtonLoading && (

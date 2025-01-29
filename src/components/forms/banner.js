@@ -201,7 +201,7 @@ export default function BannerForm({
             </div>
           </div>
 
-          <div className="!mt-6 text-end">
+          <div className="mt-6! text-end">
             <Button className="" disabled={isButtonLoading}>
               Submit
               {isButtonLoading && (

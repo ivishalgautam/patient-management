@@ -17,12 +17,10 @@ export default function RootLayout({ children }) {
         className={`${GeistSans.className} overflow-x-hidden`}
         suppressHydrationWarning={true}
       >
-        <Context>
-          <Toaster richColors />
-          <QueryProvider>
-            <Layout>{children}</Layout>
-          </QueryProvider>
-        </Context>
+        <Toaster richColors />
+        <QueryProvider>
+          <Layout>{children}</Layout>
+        </QueryProvider>
       </body>
     </html>
   );

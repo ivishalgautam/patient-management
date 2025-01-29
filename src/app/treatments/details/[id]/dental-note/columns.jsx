@@ -12,11 +12,22 @@ import {
 import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { rupee } from "@/lib/Intl";
+import { Badge } from "@/components/ui/badge";
 
 export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
   {
-    accessorKey: "affected_tooth",
-    header: "AFFECTED TOOTH",
+    accessorKey: "affected_tooths",
+    header: "AFFECTED TOOTHS",
+    cell: (row) => {
+      const tooths = row.getValue("affected_tooths");
+      return (
+        <div className="space-x-1">
+          {tooths.map((tooth) => (
+            <Badge key={tooth}>{tooth}</Badge>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "procedure_name",
@@ -56,6 +67,24 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
     cell: (row) => {
       const totalCost = row.getValue("total_cost");
       return <div className="capitalize">{rupee.format(totalCost)}</div>;
+    },
+  },
+  {
+    accessorKey: "added_by",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ADDED BY
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: (row) => {
+      const name = row.getValue("added_by");
+      return <div className="capitalize">{name}</div>;
     },
   },
   {

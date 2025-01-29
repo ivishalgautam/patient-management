@@ -45,10 +45,19 @@ export function NavMain({ items }) {
                       item.items?.some((item) => item.url === pathname),
                   })}
                 >
-                  <Link href={item.url}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </Link>
+                  <CollapsibleTrigger
+                    asChild
+                    className={cn({
+                      "bg-black/5 text-black":
+                        pathname.includes(item.url) ||
+                        item.items?.some((item) => item.url === pathname),
+                    })}
+                  >
+                    <Link href={item.url}>
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                    </Link>
+                  </CollapsibleTrigger>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <>

@@ -31,6 +31,24 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
     header: "OXYGEN SATURATION",
   },
   {
+    accessorKey: "added_by",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ADDED BY
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: (row) => {
+      const name = row.getValue("added_by");
+      return <div className="capitalize">{name}</div>;
+    },
+  },
+  {
     accessorKey: "created_at",
     header: ({ column }) => {
       return <Button variant="ghost">DATE</Button>;

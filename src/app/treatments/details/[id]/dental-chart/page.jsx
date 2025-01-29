@@ -8,29 +8,23 @@ import {
   svgSelectedFill,
   svgStroke,
 } from "@/data/dental-chart";
-import {
-  createDentalChart,
-  fetchDentalChartByTreatment,
-  fetchDentalNotes,
-  updateDentalNote,
-} from "@/server/treatment";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchDentalNotes } from "@/server/treatment";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { DentalNoteCreateDialog } from "./_components/create-dialog";
 import Spinner from "@/components/Spinner";
-import { DentalNoteUpdateDialog } from "./_components/update-dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function DentalChartPage({ params: { id: treatmentId } }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [id, setId] = useState("");
-  const queryClient = useQueryClient();
-  const { setValue, handleSubmit, watch } = useForm({
+  const { setValue, watch } = useForm({
     defaultValues: {
       treatment_id: treatmentId,
-      affected_tooth: "",
+      affected_tooths: [],
+      is_select_teeth: false,
     },
   });
 
@@ -40,60 +34,44 @@ export default function DentalChartPage({ params: { id: treatmentId } }) {
     enabled: !!treatmentId,
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (data) => updateDentalNote(id, data),
-    onSuccess: (data) => toast.success("Update"),
-    onError: (error) =>
-      toast.error(
-        error?.response?.data?.message ?? error?.message ?? "Error updating.",
-      ),
-    onSettled: () => {
-      setIsUpdateOpen(false);
-      queryClient.invalidateQueries([`dental-notes-${treatmentId}`]);
-    },
-  });
+  const everyAffectedTooth = useMemo(
+    () =>
+      data
+        ? Array.from(
+            new Set([...data.notes.flatMap((item) => item.affected_tooths)]),
+          )
+        : [],
+    [data],
+  );
 
-  const affectedTooth = watch("affected_tooth");
-  const affectedTooths = useMemo(() => {
-    return (
-      data?.notes?.map(({ id, affected_tooth }) => ({ id, affected_tooth })) ??
-      []
-    );
-  }, [data]);
+  const isSelectTeeth = watch("is_select_teeth");
+  const affectedTooth = watch("affected_tooths");
 
   const handleSelectTeeth = (id) => {
+    if (!isSelectTeeth)
+      return toast.warning("Please check select teeth to add teeth.");
     if (!id) return toast.warning("Please select a teeth.");
-    setValue("affected_tooth", id);
-    setIsCreateOpen(true);
-  };
-  const handleViewTeeth = (toothId) => {
-    if (!toothId) return toast.warning("Please select a teeth.");
-    const id = affectedTooths.find(
-      (item) => item.affected_tooth === toothId,
-    ).id;
-    console.log({ id });
-    setId(id);
-    setIsUpdateOpen(true);
+
+    const toothsToSet = affectedTooth.includes(id)
+      ? affectedTooth.filter((item) => item !== id)
+      : [...affectedTooth, id];
+
+    setValue("affected_tooths", toothsToSet);
   };
 
-  const createMutation = useMutation({
-    mutationFn: createDentalChart,
-    onSuccess: () => {
-      queryClient.invalidateQueries([`dental-notes-${treatmentId}`]);
-    },
-    onError: (error) =>
-      toast.error(error?.response?.data?.message ?? error?.message ?? "Error"),
-  });
-
-  const onSubmit = (data) => {
-    createMutation.mutate(data);
-  };
-  // console.log(affectedTooths?.some((item) => item.affected_tooth === "1"));
   useEffect(() => {
-    if (data) {
-      setValue("affected_tooth", data.affected_tooth);
+    if (everyAffectedTooth) {
+      setValue("affected_tooths", everyAffectedTooth ?? []);
     }
-  }, [data, setValue]);
+  }, [setValue, everyAffectedTooth]);
+
+  useEffect(() => {
+    if (isSelectTeeth) {
+      setValue("affected_tooths", []);
+    } else {
+      setValue("affected_tooths", everyAffectedTooth);
+    }
+  }, [setValue, isSelectTeeth, everyAffectedTooth]);
 
   if (isLoading) return <Spinner />;
   if (isError) return error?.message ?? "error";
@@ -101,35 +79,50 @@ export default function DentalChartPage({ params: { id: treatmentId } }) {
   return (
     <PageContainer>
       <Heading title={"Dental Chart"} description={"Manage dental chart"} />
-      <div className="mx-auto w-80">
-        <svg
-          id="svg68"
-          version="1.1"
-          viewBox="0 0 450 750"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {paths.map((item) => {
-            const isAffected = affectedTooths.some(
-              ({ affected_tooth }) => affected_tooth === item.id,
-            );
-            const isSelected = affectedTooth === item.id;
-            return (
-              <path
-                {...item.path}
-                key={item.id}
-                strokeWidth="3"
-                stroke={svgStroke}
-                fill={isSelected || isAffected ? svgSelectedFill : svgFill}
-                onClick={() =>
-                  isAffected
-                    ? handleViewTeeth(item.id)
-                    : handleSelectTeeth(item.id)
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="border-input has-[[data-state=checked]]:border-primary relative flex w-max cursor-pointer items-center gap-2 rounded-lg border p-2 px-3 shadow-sm shadow-black/5">
+            <div className="flex items-center justify-between gap-2">
+              <Checkbox
+                className="order-1 after:absolute after:inset-0"
+                onCheckedChange={(checked) =>
+                  setValue("is_select_teeth", checked)
                 }
-                className="h-full w-full cursor-pointer transition-colors"
+                checked={watch("is_select_teeth")}
               />
-            );
-          })}
-        </svg>
+            </div>
+            <Label>Select teeth</Label>
+          </div>
+          {isSelectTeeth && affectedTooth.length > 0 && (
+            <Button type="button" onClick={() => setIsCreateOpen(true)}>
+              Add
+            </Button>
+          )}
+        </div>
+
+        <div className="mx-auto w-72">
+          <svg
+            id="svg68"
+            version="1.1"
+            viewBox="0 0 450 750"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {paths.map((item) => {
+              const isSelected = affectedTooth.includes(item.id);
+              return (
+                <path
+                  key={item.id}
+                  {...item.path}
+                  strokeWidth="3"
+                  stroke={svgStroke}
+                  fill={isSelected ? svgSelectedFill : svgFill}
+                  onClick={() => handleSelectTeeth(item.id)}
+                  className="relative h-full w-full cursor-pointer transition-colors"
+                />
+              );
+            })}
+          </svg>
+        </div>
       </div>
 
       <DentalNoteCreateDialog
@@ -138,16 +131,7 @@ export default function DentalChartPage({ params: { id: treatmentId } }) {
           setIsOpen: setIsCreateOpen,
           treatmentId,
           affectedTooth,
-          id,
-        }}
-      />
-      <DentalNoteUpdateDialog
-        {...{
-          isOpen: isUpdateOpen,
-          setIsOpen: setIsUpdateOpen,
-          treatmentId,
-          id,
-          updateMutation,
+          callback: () => setValue("is_select_teeth", false),
         }}
       />
     </PageContainer>

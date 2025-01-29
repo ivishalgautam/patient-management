@@ -111,7 +111,7 @@ function Reports({ data, isError, isLoading, error }) {
 
 function GridContainer({ children }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,1fr))] gap-4">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
       {children}
     </div>
   );
@@ -137,7 +137,7 @@ function Card(item) {
 
 function Skelotons({ length = 3 }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,1fr))] gap-4">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
       {Array.from({ length }).map((_, key) => (
         <Skeleton className={"h-[74.6px] bg-gray-200"} key={key} />
       ))}

@@ -3,45 +3,43 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import Spinner from "../Spinner";
-import { useEffect } from "react";
-import { createDentalNote, fetchDentalNote } from "@/server/treatment";
+import { createDentalNote } from "@/server/treatment";
 import { Textarea } from "../ui/textarea";
 import { dentalNoteSchema } from "@/validation-schemas/dental-note";
+import { Badge } from "../ui/badge";
 
 export default function DentalNoteForm({
   type = "create",
   treatmentId,
   updateMutation,
   closeDialog,
-  id,
   affectedTooth,
+  callback,
 }) {
   const queryClient = useQueryClient();
+  const form = useForm({
+    resolver: zodResolver(dentalNoteSchema),
+    defaultValues: {
+      treatment_id: treatmentId,
+      affected_tooths: affectedTooth,
+    },
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm({
-    resolver: zodResolver(dentalNoteSchema),
-    defaultValues: { treatment_id: treatmentId, affected_tooth: affectedTooth },
-  });
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryFn: () => fetchDentalNote(id),
-    queryKey: [`dental-note-${id}`],
-    enabled: !!id && !!(type === "edit"),
-  });
+  } = form;
 
   const createMutation = useMutation({
     mutationFn: createDentalNote,
-    onSuccess: (data) => {},
+    onSuccess: (data) => callback(),
     onError: (error) => toast.error(error?.message || "Error creating."),
     onSettled: () => {
       queryClient.invalidateQueries([`dental-notes-${treatmentId}`]);
@@ -52,7 +50,7 @@ export default function DentalNoteForm({
   const onSubmit = async (data) => {
     const payload = {
       treatment_id: treatmentId,
-      affected_tooth: data.affected_tooth,
+      affected_tooths: data.affected_tooths,
       total_cost: data.total_cost,
       notes: data.notes,
     };
@@ -65,68 +63,56 @@ export default function DentalNoteForm({
     }
   };
 
-  useEffect(() => {
-    if (data) {
-      setValue("affected_tooth", data.affected_tooth);
-      setValue("total_cost", data.total_cost);
-      setValue("notes", data.notes);
-    }
-  }, [data, setValue]);
-
-  if (type === "edit" && isLoading) return <Spinner />;
-  if (type === "edit" && isError) return error?.message ?? "error";
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-      <div className="space-y-4">
-        <div className="w-full space-y-2">
-          {/* Affected tooth */}
-          <div>
-            <Label>Affected tooth</Label>
-            <Input
-              type="number"
-              {...register("affected_tooth")}
-              placeholder="Enter Affected tooth"
-              disabled
-            />
-            {errors.affected_tooth && (
-              <span className="text-red-500">
-                {errors.affected_tooth.message}
-              </span>
-            )}
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        <div className="space-y-4">
+          <div className="w-full space-y-2">
+            {/* Affected tooth */}
+            <div>
+              <Label>Affected tooth</Label>
+              <div className="space-x-2">
+                {affectedTooth.map((tooth) => (
+                  <Badge key={tooth}>{tooth}</Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* total cost */}
+            <div>
+              <Label>Total cost</Label>
+              <Input
+                type="number"
+                {...register("total_cost", { valueAsNumber: true })}
+                placeholder="Enter total cost"
+              />
+              {errors.total_cost && (
+                <span className="text-red-500">
+                  {errors.total_cost.message}
+                </span>
+              )}
+            </div>
+
+            {/* notes */}
+            <div>
+              <Label>Notes</Label>
+              <Textarea {...register("notes")} placeholder="Enter notes" />
+              {errors.notes && (
+                <span className="text-red-500">{errors.notes.message}</span>
+              )}
+            </div>
           </div>
 
-          {/* total cost */}
-          <div>
-            <Label>Total cost</Label>
-            <Input
-              type="number"
-              {...register("total_cost", { valueAsNumber: true })}
-              placeholder="Enter total cost"
-            />
-            {errors.total_cost && (
-              <span className="text-red-500">{errors.total_cost.message}</span>
-            )}
-          </div>
-
-          {/* notes */}
-          <div>
-            <Label>Notes</Label>
-            <Textarea {...register("notes")} placeholder="Enter notes" />
-            {errors.notes && (
-              <span className="text-red-500">{errors.notes.message}</span>
-            )}
+          <div className="text-end">
+            <Button className="" disabled={createMutation.isLoading}>
+              Submit
+              {createMutation.isLoading && (
+                <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+              )}
+            </Button>
           </div>
         </div>
-        <div className="text-end">
-          <Button className="" disabled={createMutation.isLoading}>
-            Submit
-            {createMutation.isLoading && (
-              <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
-            )}
-          </Button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </FormProvider>
   );
 }

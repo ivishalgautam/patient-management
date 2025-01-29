@@ -2,7 +2,7 @@
 import React, { useContext, useEffect } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { publicRoutes, sidebarData } from "@/data/routes";
-import { MainContext } from "@/store/context";
+import Context, { MainContext } from "@/store/context";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import ClinicContextProvider from "@/store/clinic-context";
@@ -27,7 +27,6 @@ const filteredRoutes = [...parentRoutes, ...childRoutes];
 export default function Layout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isUserLoading } = useContext(MainContext);
   const { id } = useParams();
   useEffect(() => {
     if (publicRoutes.some((route) => route === pathname)) {
@@ -50,25 +49,26 @@ export default function Layout({ children }) {
     if (!currentRoute?.roles?.includes(currentUser.role)) {
       router.replace("/unauthorized");
     }
-  }, [pathname, user, isUserLoading, id, router]);
+  }, [pathname, id, router]);
 
   const getContent = () => {
     if (publicRoutes.includes(pathname)) {
       return children;
     }
-
     return (
-      <ClinicContextProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full bg-gray-100">
-            <SidebarTrigger />
-            <ScrollArea className="h-[calc(100vh-30px)]">
-              <div className="px-6 pb-2">{children}</div>
-            </ScrollArea>
-          </main>
-        </SidebarProvider>
-      </ClinicContextProvider>
+      <Context>
+        <ClinicContextProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <main className="w-full bg-gray-100">
+              <SidebarTrigger />
+              <ScrollArea className="h-[calc(100vh-30px)]">
+                <div className="px-6 pb-2">{children}</div>
+              </ScrollArea>
+            </main>
+          </SidebarProvider>
+        </ClinicContextProvider>
+      </Context>
     );
   };
 

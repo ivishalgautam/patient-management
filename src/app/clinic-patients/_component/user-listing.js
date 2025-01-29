@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useId, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,9 +9,8 @@ import React from "react";
 import { columns } from "../columns";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import {
-  deleteUser,
+  deleteClinicPatient,
   fetchClinicPatients,
-  fetchPatients,
   updateUser,
   updateUserStatus,
 } from "@/server/users";
@@ -44,9 +43,9 @@ export default function UserListing() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ id }) => deleteUser(id),
+    mutationFn: ({ id }) => deleteClinicPatient(id),
     onSuccess: () => {
-      toast.success("Customer deleted.");
+      toast.success("Patient deleted.");
       queryClient.invalidateQueries(["patients"]);
     },
     onError: (error) => {

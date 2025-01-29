@@ -31,6 +31,7 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
 
       if (!refreshToken) {
         // Refresh token is missing, logout the user
+        window.location.href = "/";
         return Promise.reject(error.response.data);
       }
       // Refresh access token
@@ -52,13 +53,13 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
           return client(error.config);
         })
         .catch((refreshError) => {
-          // console.log({ refreshError });
           if (refreshError.response?.status === 401) {
             // Refresh token is expired or invalid, logout the user
             localStorage.clear();
+            window.location.href = "/";
           } else {
             // Unable to refresh the token
-            // console.log("Error refreshing token:", refreshError);
+            console.log("Error refreshing token:", refreshError);
           }
           return Promise.reject(refreshError);
         });
@@ -86,6 +87,7 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
     if (isFormData) {
       config.headers = { "Content-Type": "multipart/form-data" };
     }
+    console.log({ payload });
     return client.post(path, payload, config).then((response) => {
       return response.data;
     });

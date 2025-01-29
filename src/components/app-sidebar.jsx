@@ -12,15 +12,12 @@ import {
 import { sidebarData } from "@/data/routes";
 import { MainContext } from "@/store/context";
 import { NavUser } from "./nav-user";
-import { useQuery } from "@tanstack/react-query";
-import { endpoints } from "@/utils/endpoints";
-import http from "@/utils/http";
 import { ClinicSwitcher } from "./clinic-switcher";
 import { Skeleton } from "./ui/skeleton";
 import { ClinicContext } from "@/store/clinic-context";
 
 export function AppSidebar({ ...props }) {
-  const { user } = React.useContext(MainContext);
+  const { user, isUserLoading } = React.useContext(MainContext);
   const { clinics, isClinicLoading } = React.useContext(ClinicContext);
 
   const filteredRoutes = sidebarData
@@ -33,6 +30,11 @@ export function AppSidebar({ ...props }) {
         ),
       };
     });
+
+  if (isUserLoading)
+    return (
+      <Skeleton className={"z-10 h-screen w-(--sidebar-width) bg-gray-300"} />
+    );
 
   return (
     <Sidebar variant="inset" {...props}>

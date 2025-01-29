@@ -90,7 +90,7 @@ export default function Listing({ treatmentId }) {
   if (isError) error?.message ?? "error";
 
   return (
-    <div className="rounded-lg border-input">
+    <div className="border-input rounded-lg">
       <div className="mb-2 text-end">
         <Button
           type="button"
@@ -104,8 +104,8 @@ export default function Listing({ treatmentId }) {
         {data.prescriptions.map((item) => (
           <div key={item.id} className="space-y-2 rounded border">
             <div className="flex items-center justify-between p-2">
-              <div className="rounded bg-primary px-2 py-1 text-sm text-white">
-                {moment(item.created_at).format("D MMMM yyyy")}
+              <div className="bg-primary rounded px-2 py-1 text-xs text-white capitalize">
+                {`${moment(item.created_at).format("D MMMM yyyy")}, By ${item.added_by}`}
               </div>
               <ActionMenu
                 {...{ item, setIsUpdateOpen, setId, setIsDeleteOpen }}

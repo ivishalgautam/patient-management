@@ -13,21 +13,9 @@ export async function fetchTreatment(id) {
   return data;
 }
 
-export async function createDentalChart(data) {
-  const resp = await http().post(`${endpoints.dentalChart.getAll}`, data);
-  return resp.data;
-}
-
 export async function createTreatmentPlan(data) {
   const resp = await http().post(`${endpoints.treatments.plans}`, data);
   return resp.data;
-}
-
-export async function fetchDentalChartByTreatment(id) {
-  const { data } = await http().get(
-    `${endpoints.dentalChart.getAll}/getByTreatmentId/${id}`,
-  );
-  return data;
 }
 
 export const fetchTreatmentPlans = async (treatementId, params) => {
@@ -89,6 +77,99 @@ export async function deleteDentalNote(id) {
 export async function updateDentalNote(id, data) {
   const resp = await http().put(
     `${endpoints.treatments.dentalNotes}/${id}`,
+    data,
+  );
+  return resp.data;
+}
+
+// notes
+export async function createNote(data) {
+  const resp = await http().post(`${endpoints.treatments.notes}`, data);
+  return resp.data;
+}
+
+export const fetchNotes = async (treatementId, params) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.notes}/getByTreatmentId/${treatementId}?${params}`,
+  );
+  return data;
+};
+
+export const fetchNote = async (id) => {
+  const { data } = await http().get(`${endpoints.treatments.notes}/${id}`);
+  return data;
+};
+
+export async function deleteNote(id) {
+  const { data } = await http().delete(`${endpoints.treatments.notes}/${id}`);
+  return data;
+}
+
+export async function updateNote(id, data) {
+  const resp = await http().put(`${endpoints.treatments.notes}/${id}`, data);
+  return resp.data;
+}
+
+// x-rays
+export async function createXray(formData) {
+  const resp = await http().post(
+    `${endpoints.treatments.xrays}`,
+    formData,
+    true,
+  );
+  return resp.data;
+}
+
+export const fetchXrays = async (treatementId, params) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.xrays}/getByTreatmentId/${treatementId}?${params}`,
+  );
+  return data;
+};
+
+export const fetchXray = async (id) => {
+  const { data } = await http().get(`${endpoints.treatments.xrays}/${id}`);
+  return data;
+};
+
+export async function deleteXray(id) {
+  const { data } = await http().delete(`${endpoints.treatments.xrays}/${id}`);
+  return data;
+}
+
+export async function updateXray(id, data) {
+  const resp = await http().put(`${endpoints.treatments.xrays}/${id}`, data);
+  return resp.data;
+}
+
+// documents
+export async function createDocument(data) {
+  const resp = await http().post(`${endpoints.treatments.documents}`, data);
+  return resp.data;
+}
+
+export const fetchDocuments = async (treatementId, params) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.documents}/getByTreatmentId/${treatementId}?${params}`,
+  );
+  return data;
+};
+
+export const fetchDocument = async (id) => {
+  const { data } = await http().get(`${endpoints.treatments.documents}/${id}`);
+  return data;
+};
+
+export async function deleteDocument(id) {
+  const { data } = await http().delete(
+    `${endpoints.treatments.documents}/${id}`,
+  );
+  return data;
+}
+
+export async function updateDocument(id, data) {
+  const resp = await http().put(
+    `${endpoints.treatments.documents}/${id}`,
     data,
   );
   return resp.data;

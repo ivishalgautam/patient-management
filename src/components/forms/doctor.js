@@ -434,7 +434,7 @@ export default function DoctorCreateForm({ id, type, updateMutation }) {
           </div>
         </div>
 
-        <div className="!mt-6 text-end">
+        <div className="mt-6! text-end">
           <Button className="transition-all" disabled={isButtonLoading}>
             Submit
             {isButtonLoading && (

@@ -94,7 +94,7 @@ export default function LoginForm() {
             />
           </div>
 
-          <div className="!mt-6 text-end">
+          <div className="mt-6! text-end">
             <Button className="w-full rounded-full px-12 py-6">
               {loading && (
                 <span className="mr-3 h-5 w-5 animate-spin rounded-full border-4 border-white/30 border-t-white"></span>

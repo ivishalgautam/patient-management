@@ -113,25 +113,31 @@ export const sidebarData = [
     title: "Treatments",
     url: "#",
     icon: Users,
-    roles: [ROLES.DOCTOR],
+    roles: [ROLES.DOCTOR, ROLES.STAFF],
     isVisible: true,
     items: [
       {
         title: "All Treatments",
         url: "/treatments",
-        roles: [ROLES.DOCTOR],
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: true,
       },
       {
         title: "Patient details",
         url: "/treatments/details/[id]",
-        roles: [ROLES.DOCTOR],
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
+        isVisible: false,
+      },
+      {
+        title: "Comprehensive Examination",
+        url: "/treatments/details/[id]/comprehensive-examination",
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: false,
       },
       {
         title: "Treatment plan",
         url: "/treatments/details/[id]/treatment-plan",
-        roles: [ROLES.DOCTOR],
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
         isVisible: false,
       },
       {
@@ -161,6 +167,24 @@ export const sidebarData = [
       {
         title: "Prescription",
         url: "/treatments/details/[id]/prescription",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Notes",
+        url: "/treatments/details/[id]/notes",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "X-Rays",
+        url: "/treatments/details/[id]/x-rays",
+        roles: [ROLES.DOCTOR],
+        isVisible: false,
+      },
+      {
+        title: "Documents",
+        url: "/treatments/details/[id]/documents",
         roles: [ROLES.DOCTOR],
         isVisible: false,
       },

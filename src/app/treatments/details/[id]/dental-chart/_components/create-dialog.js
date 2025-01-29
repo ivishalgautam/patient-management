@@ -12,7 +12,7 @@ export function DentalNoteCreateDialog({
   setIsOpen,
   treatmentId,
   affectedTooth,
-  id,
+  callback,
 }) {
   return (
     <>
@@ -26,6 +26,7 @@ export function DentalNoteCreateDialog({
             treatmentId={treatmentId}
             closeDialog={setIsOpen}
             affectedTooth={affectedTooth}
+            callback={callback}
           />
         </DialogContent>
       </Dialog>

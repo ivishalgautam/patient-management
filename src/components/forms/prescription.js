@@ -207,7 +207,7 @@ export default function PrescriptionForm({
                   </div>
 
                   {/* notes */}
-                  <div className="flex-grow">
+                  <div className="grow">
                     <Label>Notes</Label>
                     <Input
                       type="text"

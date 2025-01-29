@@ -155,7 +155,7 @@ export default function SignUpForm() {
             )}
           </div>
 
-          <div className="!mt-6 text-end">
+          <div className="mt-6! text-end">
             <Button className="w-full rounded-full" disabled={loading}>
               {loading ? "Generating business card..." : "Register"}
             </Button>

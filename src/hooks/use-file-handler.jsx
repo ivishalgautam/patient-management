@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import useLocalStorage from "./use-local-storage";
 import { endpoints } from "@/utils/endpoints";
+import config from "@/config";
 
 const useFileHandler = () => {
   const [token] = useLocalStorage("token");
@@ -27,12 +28,13 @@ const useFileHandler = () => {
     }
   };
 
-  const deleteFile = async (filePath, url) => {
+  const deleteFile = async (filePath, setValue, name) => {
     try {
-      const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.getFiles}?file_path=${filePath}`;
+      const deleteUrl = `${config.api_base}${endpoints.files.getFiles}?file_path=${filePath}`;
       await axios.delete(deleteUrl);
 
       setImage(null);
+      typeof setValue === "function" && setValue(name, "");
       return true;
     } catch (error) {
       console.error("Error deleting file:", error);
@@ -57,7 +59,7 @@ const useFileHandler = () => {
         const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.getFiles}`;
         await deleteFile(image, deleteUrl);
       }
-
+      console.log({ file });
       setImage(file);
       setValue(name, file);
 

@@ -22,6 +22,9 @@ export const endpoints = {
     getAll: "/treatments",
     plans: "/treatment-plans",
     dentalNotes: "/dental-notes",
+    notes: "/notes",
+    xrays: "/x-rays",
+    documents: "/documents",
     investigations: "/investigations",
     prescriptions: "/treatment-prescriptions",
     payments: "/treatment-payments",
@@ -58,5 +61,8 @@ export const endpoints = {
     getAll: "/block-slots",
     getByClinicId: "/block-slots/getByClinicId",
     getByDateAndClinic: "/block-slots/getByDateAndClinic",
+  },
+  comprehensiveExamination: {
+    getAll: "/comprehensive-examinations",
   },
 };
