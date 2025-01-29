@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getHeader } from "./header";
 import { endpoints } from "./endpoints";
+import config from "@/config";
 
 // Default API will be your root
-const API_ROOT = process.env.NEXT_PUBLIC_API_URL;
+const API_ROOT = config.api_base;
 const TIMEOUT = 20000;
 
 const http = (headerType = "json", baseURL = API_ROOT) => {
@@ -87,7 +88,6 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
     if (isFormData) {
       config.headers = { "Content-Type": "multipart/form-data" };
     }
-    console.log({ payload });
     return client.post(path, payload, config).then((response) => {
       return response.data;
     });
