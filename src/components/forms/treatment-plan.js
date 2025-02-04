@@ -131,7 +131,6 @@ export default function TreatmentPlanForm({
   }, [treatmentPlan, setValue]);
 
   if (isError) return error?.message ?? "Error";
-  console.log(watch("notes"), errors);
   return (
     <FormProvider {...form}>
       {type === "edit" && isLoading ? (
@@ -247,7 +246,7 @@ export default function TreatmentPlanForm({
                               key={ind}
                             >
                               <Badge>
-                                {moment(note.date).format("DDD MMM, YYYY")}
+                                {moment(note.date).format("DD MMM, YYYY")}
                               </Badge>
                               <div>{note.note}</div>
                             </div>

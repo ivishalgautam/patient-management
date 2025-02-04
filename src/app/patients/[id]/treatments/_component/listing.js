@@ -58,7 +58,7 @@ export default function Listing({ patientId }) {
     mutationFn: ({ id }) => deleteTreatment(id),
     onSuccess: () => {
       toast.success("Patient deleted.");
-      queryClient.invalidateQueries([`treatments-${clinic.id}`]);
+      queryClient.invalidateQueries([`treatments-${clinic.id}-${patientId}`]);
     },
     onError: (error) => {
       toast.error(error?.message ?? "error deleting!");
@@ -72,20 +72,12 @@ export default function Listing({ patientId }) {
     deleteMutation.mutate({ id });
   };
 
-  // async function handleStatus(treatementId, status) {
-  //   try {
-  //     const response = await updateTreatmentStatus(treatementId, status);
-  //     toast.success(response?.message ?? "Status changed");
-  //     queryClient.invalidateQueries([`treatments-${clinic.id}`]);
-  //   } catch (error) {}
-  // }
-
   const updateMutation = useMutation({
     mutationFn: (data) =>
-      updateTreatment(data.treatemnt_id, { is_active: data.is_active }),
+      updateTreatment(data.treatemnt_id, { status: data.status }),
     onSuccess: (data) => {
       toast.success("Updated");
-      queryClient.invalidateQueries([`treatments-${clinic.id}`]);
+      queryClient.invalidateQueries([`treatments-${clinic.id}-${patientId}`]);
       setIsModal(false);
     },
     onError: (error) => {
@@ -93,8 +85,8 @@ export default function Listing({ patientId }) {
     },
   });
 
-  const handleUpdate = (data) => {
-    updateMutation.mutate(data);
+  const handleStatusChange = (id, status) => {
+    updateMutation.mutate({ treatemnt_id: id, status });
   };
 
   useEffect(() => {
@@ -117,7 +109,10 @@ export default function Listing({ patientId }) {
             key={treatment.id}
             href={`${pathname}/details?tid=${treatment.id}`}
           >
-            <TreatmentCard {...treatment} updateMutation={updateMutation} />
+            <TreatmentCard
+              treatment={treatment}
+              handleStatusChange={handleStatusChange}
+            />
           </Link>
         ))}
       </div>

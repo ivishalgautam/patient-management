@@ -42,7 +42,7 @@ export default function TreatmentDetailsPage({ params: { id } }) {
     queryFn: () => fetchTreatment(tid),
     enabled: !!tid,
   });
-
+  console.log({ data });
   if (isError) return error?.message ?? "error";
 
   return (
@@ -56,7 +56,7 @@ export default function TreatmentDetailsPage({ params: { id } }) {
             <H2>{data.service_name}</H2>
           </div>
           <div className="bg-primary/30 border-primary relative flex w-max gap-4 rounded-lg border p-3">
-            {data?.balance <= 0 && (
+            {data.cost && data?.balance <= 0 && (
               <Badge
                 className={
                   "absolute -top-2 -right-2 border-emerald-600 bg-emerald-500"

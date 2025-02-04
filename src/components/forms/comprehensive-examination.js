@@ -24,6 +24,8 @@ export default function ComprehensiveExaminationForm({
   type = "create",
   patientId,
   createMutation,
+  updateMutation,
+  defaultValues = {},
 }) {
   const {
     register,
@@ -83,9 +85,27 @@ export default function ComprehensiveExaminationForm({
       gallery: images,
       affected_tooths: affectedTooth,
     };
-    createMutation.mutate(payload);
+
+    if (type === "create") {
+      createMutation.mutate(payload);
+    }
+    if (type === "edit") {
+      updateMutation.mutate(payload);
+    }
   };
-  console.log({ errors });
+
+  useEffect(() => {
+    if (type === "edit") {
+      setValue("chief_complaint", defaultValues.chief_complaint);
+      setValue("medical_history", defaultValues.medical_history);
+      setValue("dental_history", defaultValues.dental_history);
+      setValue("examination", defaultValues.examination);
+      setValue("gallery", defaultValues.gallery);
+      setImages(defaultValues.gallery);
+      setValue("affected_tooths", defaultValues.affected_tooths);
+    }
+  }, [type, defaultValues, setValue, setImages]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
       {/* Affected tooth */}
