@@ -19,6 +19,9 @@ export const endpoints = {
   },
   treatments: {
     getByClinic: "/treatments/getByClinicId",
+    getByPatientAndClinic: "/treatments/getByPatientAndClinicId",
+    getPatientDetailsByPatientAndClinic:
+      "/treatments/getPatientDetailsByPatientAndClinicId",
     getAll: "/treatments",
     plans: "/treatment-plans",
     dentalNotes: "/dental-notes",

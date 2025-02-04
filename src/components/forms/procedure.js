@@ -100,7 +100,7 @@ export default function ProcedureForm({
                 {image ? (
                   <figure className="relative size-32">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                      src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
                       width={500}
                       height={500}
                       alt="image"
@@ -111,7 +111,7 @@ export default function ProcedureForm({
                       type="button"
                       variant="destructive"
                       onClick={() => deleteFile(image)}
-                      className="absolute -right-2 -top-2"
+                      className="absolute -top-2 -right-2"
                       size="icon"
                     >
                       <Trash size={20} />
@@ -138,7 +138,7 @@ export default function ProcedureForm({
                 control={control}
                 name="is_featured"
                 render={({ field }) => (
-                  <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
+                  <div className="flex flex-row items-start space-y-0 space-x-3 rounded-md border p-3">
                     <div>
                       <Checkbox
                         checked={field.value}

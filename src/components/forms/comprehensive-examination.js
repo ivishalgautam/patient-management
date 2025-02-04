@@ -12,11 +12,17 @@ import Image from "next/image";
 import config from "@/config";
 import { Trash } from "lucide-react";
 import { useEffect } from "react";
+import {
+  paths,
+  svgFill,
+  svgSelectedFill,
+  svgStroke,
+} from "@/data/dental-chart";
 // import { ExaminationContext } from "@/store/examination-context";
 
 export default function ComprehensiveExaminationForm({
   type = "create",
-  treatmentId,
+  patientId,
   createMutation,
 }) {
   const {
@@ -30,15 +36,16 @@ export default function ComprehensiveExaminationForm({
   } = useForm({
     resolver: zodResolver(comprehensiveExaminationSchema),
     defaultValues: {
-      treatment_id: treatmentId,
+      patient_id: patientId,
       chief_complaint: "",
       medical_history: "",
       dental_history: "",
       examination: "",
-      treatment_advice: [],
       gallery: [],
+      affected_tooths: [],
     },
   });
+
   const { handleFileChange, deleteFile, images, setImages } =
     useMultiFileHandler("gallery");
 
@@ -53,6 +60,16 @@ export default function ComprehensiveExaminationForm({
     }
   }, [setValue]);
 
+  const affectedTooth = watch("affected_tooths");
+  const handleSelectTeeth = (id) => {
+    if (!id) return toast.warning("Please select a teeth.");
+
+    const toothsToSet = affectedTooth.includes(id)
+      ? affectedTooth.filter((item) => item !== id)
+      : [...affectedTooth, id];
+
+    setValue("affected_tooths", toothsToSet);
+  };
   const onSubmit = (data) => {
     if (!images.length) {
       return setError("gallery", {
@@ -60,16 +77,47 @@ export default function ComprehensiveExaminationForm({
         message: "Please select gallery",
       });
     }
+
     const payload = {
       ...data,
       gallery: images,
+      affected_tooths: affectedTooth,
     };
     createMutation.mutate(payload);
   };
-  const selectedTreatmentAdvices = watch("treatment_advice");
-
+  console.log({ errors });
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+      {/* Affected tooth */}
+      <div className="mx-auto w-56">
+        <svg
+          id="svg68"
+          version="1.1"
+          viewBox="0 0 450 750"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {paths.map((item) => {
+            const isSelected = affectedTooth.includes(item.id);
+            return (
+              <path
+                key={item.id}
+                {...item.path}
+                strokeWidth="3"
+                stroke={svgStroke}
+                fill={isSelected ? svgSelectedFill : svgFill}
+                onClick={() => handleSelectTeeth(item.id)}
+                className="relative h-full w-full cursor-pointer transition-colors"
+              />
+            );
+          })}
+        </svg>
+        {errors.affected_tooths && (
+          <span className="text-sm text-red-500">
+            {errors.affected_tooths.message}
+          </span>
+        )}
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         {/* Chief Complaint */}
         <div>
@@ -126,47 +174,6 @@ export default function ComprehensiveExaminationForm({
             </span>
           )}
         </div>
-      </div>
-
-      {/* Treatment Advice */}
-      <div>
-        <Label>Treatment Advice</Label>
-        <div className="flex items-center justify-start gap-4">
-          {["OPG", "CBCT", "5D Scan"].map((item, id) => (
-            <div
-              key={id}
-              className="border-input has-[[data-state=checked]]:border-primary relative flex cursor-pointer items-center gap-2 rounded-lg border p-2 px-3 shadow-sm shadow-black/5"
-            >
-              <div className="flex justify-between gap-2">
-                <Checkbox
-                  id={`${id}-${item}`}
-                  value={item}
-                  className="order-1 after:absolute after:inset-0"
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setValue("treatment_advice", [
-                        ...selectedTreatmentAdvices,
-                        item,
-                      ]);
-                    } else {
-                      setValue(
-                        "treatment_advice",
-                        selectedTreatmentAdvices.filter((ele) => ele !== item),
-                      );
-                    }
-                  }}
-                  checked={selectedTreatmentAdvices.includes(item)}
-                />
-              </div>
-              <Label htmlFor={`${id}-${item}`}>{item}</Label>
-            </div>
-          ))}
-        </div>
-        {errors.treatment_advice && (
-          <span className="text-sm text-red-500">
-            {errors.treatment_advice.message}
-          </span>
-        )}
       </div>
 
       {/* Gallery */}

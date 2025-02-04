@@ -2,7 +2,7 @@ import { endpoints } from "./endpoints";
 import http from "./http";
 import axios from "axios";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_DRDIPTI_API_URL;
 
 // fetch all product by category or brand
 export async function fetchProducts(type, slug, page, limit = 10) {

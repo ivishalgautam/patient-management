@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const baseUrl = process.env.NEXT_PUBLIC_IMAGE_DOMAIN;
+const baseUrl = process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN;
 export default function ImageWithFallback({
   width,
   height,

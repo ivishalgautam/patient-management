@@ -14,6 +14,7 @@ export const searchParams = {
   role: parseAsString,
   type: parseAsString,
   method: parseAsString,
+  tid: parseAsString,
 };
 
 export const searchParamsCache = createSearchParamsCache(searchParams);

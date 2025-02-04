@@ -112,7 +112,7 @@ export default function BannerForm({
                   <figure className="relative size-64">
                     {watch("type") === "banner" ? (
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                        src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
                         width={200}
                         height={200}
                         alt="image"
@@ -124,7 +124,7 @@ export default function BannerForm({
                       />
                     ) : (
                       <video
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                        src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
                         controls
                         width={640}
                         height={480}
@@ -134,7 +134,7 @@ export default function BannerForm({
                       type="button"
                       variant="destructive"
                       onClick={() => deleteFile(image)}
-                      className="absolute -right-2 -top-2"
+                      className="absolute -top-2 -right-2"
                       size="icon"
                     >
                       <Trash size={20} />
@@ -153,7 +153,7 @@ export default function BannerForm({
                 control={control}
                 name="is_featured"
                 render={({ field }) => (
-                  <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-2">
+                  <div className="flex flex-row items-start space-y-0 space-x-3 rounded-md border p-2">
                     <div>
                       <Checkbox
                         checked={field.value}

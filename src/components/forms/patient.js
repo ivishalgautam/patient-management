@@ -155,7 +155,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
                 {image ? (
                   <figure className="relative size-32">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
+                      src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
                       width={500}
                       height={500}
                       alt="image"
@@ -169,7 +169,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
                       type="button"
                       variant="destructive"
                       onClick={() => deleteFile(image)}
-                      className="absolute -right-2 -top-2"
+                      className="absolute -top-2 -right-2"
                       size="icon"
                     >
                       <Trash size={20} />

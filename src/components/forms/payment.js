@@ -9,8 +9,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import Spinner from "../Spinner";
-import { useEffect } from "react";
-import { createPayment, fetchPayment } from "@/server/treatment";
+import { useContext, useEffect } from "react";
+import {
+  createPayment,
+  fetchPayment,
+  fetchRemainingPayment,
+} from "@/server/treatment";
 import {
   Select,
   SelectContent,
@@ -20,6 +24,8 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { treatmentPaymentSchema } from "@/validation-schemas/payment";
+import useFetchPatientTreatments from "@/hooks/use-fetch-patient-treatments";
+import { ClinicContext } from "@/store/clinic-context";
 
 export default function PaymentForm({
   type = "create",
@@ -27,6 +33,7 @@ export default function PaymentForm({
   updateMutation,
   closeDialog,
   id,
+  patientId,
 }) {
   const queryClient = useQueryClient();
   const {
@@ -38,12 +45,36 @@ export default function PaymentForm({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(treatmentPaymentSchema),
+    defaultValues: { treatment_id: treatmentId ? treatmentId : "" },
   });
-  const values = watch();
+
+  console.log(watch("treatment_id"));
+
+  const { clinic } = useContext(ClinicContext);
+  const { data: treatments } = useFetchPatientTreatments(patientId, clinic.id);
+
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchPayment(id),
     queryKey: [`payment-${id}`],
     enabled: !!id && !!(type === "edit"),
+  });
+
+  const paymentType = watch("payment_type");
+  const isFullPayment = watch("payment_type") === "full";
+  const {
+    data: remainingPayment,
+    isLoading: isRemainingPaymentLoading,
+    isError: isRemainingPaymentError,
+    error: remainingPaymentError,
+  } = useQuery({
+    queryFn: () => fetchRemainingPayment(watch("treatment_id") || treatmentId),
+    queryKey: [
+      `remainingPayment-${id}`,
+      watch("treatment_id"),
+      treatmentId,
+      isFullPayment,
+    ],
+    enabled: (watch("treatment_id") || !!treatmentId) && !!isFullPayment,
   });
 
   const createMutation = useMutation({
@@ -58,7 +89,7 @@ export default function PaymentForm({
 
   const onSubmit = async (data) => {
     const payload = {
-      treatment_id: treatmentId,
+      treatment_id: data.treatment_id,
       payment_type: data.payment_type,
       payment_method: data.payment_method,
       amount_paid: data.amount_paid,
@@ -72,7 +103,7 @@ export default function PaymentForm({
       createMutation.mutate(payload);
     }
   };
-  //   console.log(watch());
+
   useEffect(() => {
     if (type === "edit" && data) {
       setValue("payment_type", data.payment_type);
@@ -82,6 +113,14 @@ export default function PaymentForm({
     }
   }, [data, setValue, type]);
 
+  useEffect(() => {
+    if (paymentType === "full" && remainingPayment?.remaining_amount) {
+      setValue("amount_paid", remainingPayment.remaining_amount);
+    } else {
+      setValue("amount_paid", "");
+    }
+  }, [remainingPayment, setValue, paymentType]);
+
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError) return error?.message ?? "error";
 
@@ -89,6 +128,39 @@ export default function PaymentForm({
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <div className="space-y-4">
         <div className="w-full space-y-2">
+          {/* treatment */}
+          {patientId && (
+            <div>
+              <Label>Treatment</Label>
+              <Controller
+                control={control}
+                name="treatment_id"
+                rules={{ required: "required*" }}
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Treatment" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {treatments?.map((t) => (
+                          <SelectItem key={t.id} value={t.id}>
+                            {t.service_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
+              />
+              {errors.treatment_id && (
+                <span className="text-red-500">
+                  {errors.treatment_id.message}
+                </span>
+              )}
+            </div>
+          )}
+
           {/* payment type */}
           <div>
             <Label>Payment type</Label>
@@ -153,6 +225,7 @@ export default function PaymentForm({
               type="number"
               {...register("amount_paid", { valueAsNumber: true })}
               placeholder="Enter amount paid"
+              disabled={isFullPayment}
             />
             {errors.amount_paid && (
               <span className="text-red-500">{errors.amount_paid.message}</span>

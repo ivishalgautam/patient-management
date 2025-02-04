@@ -17,7 +17,7 @@ function ExaminationProvider({ children, id }) {
       setIsLoading(true);
       try {
         const { data } = await http().get(
-          `${endpoints.comprehensiveExamination.getAll}/getByTreatmentId/${id}`,
+          `${endpoints.comprehensiveExamination.getAll}/getByPatientId/${id}`,
         );
         setExamination(data);
         return data;

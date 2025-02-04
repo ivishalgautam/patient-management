@@ -12,15 +12,14 @@ import Spinner from "../Spinner";
 import { useEffect } from "react";
 import { createNote, fetchNote } from "@/server/treatment";
 import { Textarea } from "../ui/textarea";
-import { dentalNoteSchema } from "@/validation-schemas/dental-note";
+import { noteSchema } from "@/validation-schemas/note";
 
 export default function NoteForm({
   type = "create",
-  treatmentId,
+  patientId,
   updateMutation,
   closeDialog,
   id,
-  affectedTooth,
 }) {
   const queryClient = useQueryClient();
   const {
@@ -29,8 +28,8 @@ export default function NoteForm({
     formState: { errors },
     setValue,
   } = useForm({
-    resolver: zodResolver(dentalNoteSchema),
-    defaultValues: { treatment_id: treatmentId, affected_tooth: affectedTooth },
+    resolver: zodResolver(noteSchema),
+    defaultValues: { patient_id: patientId, affected_tooths: "" },
   });
 
   const { data, isLoading, isError, error } = useQuery({
@@ -44,16 +43,15 @@ export default function NoteForm({
     onSuccess: (data) => {},
     onError: (error) => toast.error(error?.message || "Error creating."),
     onSettled: () => {
-      queryClient.invalidateQueries([`notes-${treatmentId}`]);
+      queryClient.invalidateQueries([`notes-${patientId}`]);
       closeDialog(false);
     },
   });
 
   const onSubmit = async (data) => {
     const payload = {
-      treatment_id: treatmentId,
-      affected_tooth: data.affected_tooth,
-      total_cost: data.total_cost,
+      patient_id: patientId,
+      affected_tooths: data.affected_tooths,
       notes: data.notes,
     };
 
@@ -68,7 +66,6 @@ export default function NoteForm({
   useEffect(() => {
     if (data) {
       setValue("affected_tooth", data.affected_tooth);
-      setValue("total_cost", data.total_cost);
       setValue("notes", data.notes);
     }
   }, [data, setValue]);
@@ -85,26 +82,13 @@ export default function NoteForm({
             <Label>Affected tooth</Label>
             <Input
               type="number"
-              {...register("affected_tooth")}
+              {...register("affected_tooths")}
               placeholder="Enter Affected tooth"
             />
-            {errors.affected_tooth && (
+            {errors.affected_tooths && (
               <span className="text-red-500">
-                {errors.affected_tooth.message}
+                {errors.affected_tooths.message}
               </span>
-            )}
-          </div>
-
-          {/* total cost */}
-          <div>
-            <Label>Total cost</Label>
-            <Input
-              type="number"
-              {...register("total_cost", { valueAsNumber: true })}
-              placeholder="Enter total cost"
-            />
-            {errors.total_cost && (
-              <span className="text-red-500">{errors.total_cost.message}</span>
             )}
           </div>
 

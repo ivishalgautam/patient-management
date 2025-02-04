@@ -24,7 +24,7 @@ import { documentSchema } from "@/validation-schemas/document";
 
 export default function DocumentForm({
   type = "create",
-  treatmentId,
+  patientId,
   updateMutation,
   closeDialog,
   id,
@@ -38,7 +38,7 @@ export default function DocumentForm({
     setValue,
   } = useForm({
     resolver: zodResolver(documentSchema),
-    defaultValues: { treatment_id: treatmentId, affected_tooth: affectedTooth },
+    defaultValues: { patient_id: patientId, affected_tooth: affectedTooth },
   });
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchDocument(id),
@@ -49,7 +49,7 @@ export default function DocumentForm({
   const createMutation = useMutation({
     mutationFn: createDocument,
     onSuccess: (data) => {
-      queryClient.invalidateQueries([`documents-${treatmentId}`]);
+      queryClient.invalidateQueries([`documents-${patientId}`]);
       closeDialog(false);
     },
     onError: (error) => toast.error(error?.message || "Error creating."),
@@ -57,7 +57,7 @@ export default function DocumentForm({
 
   const onSubmit = async (data) => {
     const payload = {
-      treatment_id: treatmentId,
+      patient_id: patientId,
       title: data.title,
       document: image,
       notes: data.notes,

@@ -14,7 +14,6 @@ import {
 import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const columns = (handleUserStatus, setUserId, openModal) => [
@@ -23,7 +22,12 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     header: "FULLNAME",
     cell: ({ row }) => {
       const fullname = row.getValue("fullname");
-      return <div className="capitalize">{fullname}</div>;
+      const patientId = row.original.patient_id;
+      return (
+        <Link href={`/patients/${patientId}`} className="capitalize">
+          {fullname}
+        </Link>
+      );
     },
   },
   {

@@ -13,7 +13,4 @@ export const comprehensiveExaminationSchema = z.object({
   examination: z
     .string({ required_error: "Examination is required." })
     .min(1, { message: "Examination is required." }),
-  treatment_advice: z
-    .array(z.string())
-    .min(1, { message: "Atleast 1 treatment advice is required." }),
 });

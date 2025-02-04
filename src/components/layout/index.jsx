@@ -7,6 +7,8 @@ import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import { AppSidebar } from "../app-sidebar";
 import ClinicContextProvider from "@/store/clinic-context";
 import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "../ui/button";
+import { ChevronLeft } from "lucide-react";
 
 const parentRoutes = sidebarData.map((item) => ({
   title: item.title,
@@ -44,7 +46,6 @@ export default function Layout({ children }) {
     const currentRoute = filteredRoleBasedRoutes?.find(
       (route) => route.url === pathname.replace(id, "[id]"),
     );
-
     // If the current route is not found in the array or the user's role is not allowed for this route
     if (!currentRoute?.roles?.includes(currentUser.role)) {
       router.replace("/unauthorized");
@@ -63,7 +64,18 @@ export default function Layout({ children }) {
             <main className="w-full bg-gray-100">
               <SidebarTrigger />
               <ScrollArea className="h-[calc(100vh-30px)]">
-                <div className="px-6 pb-2">{children}</div>
+                <div className="px-6 pb-2">
+                  <Button
+                    type="button"
+                    className="mb-2 h-8"
+                    variant="outline"
+                    onClick={() => router.back()}
+                  >
+                    <ChevronLeft />
+                    Back
+                  </Button>
+                  {children}
+                </div>
               </ScrollArea>
             </main>
           </SidebarProvider>

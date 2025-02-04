@@ -8,6 +8,17 @@ export async function fetchTreatmentsByClinicId(clinicId, params) {
   return data;
 }
 
+export async function fetchTreatmentsByPatientAndClinicId(
+  patientId,
+  clinicId,
+  params,
+) {
+  const { data } = await http().get(
+    `${endpoints.treatments.getByPatientAndClinic}/${patientId}/${clinicId}?${params}`,
+  );
+  return data;
+}
+
 export async function fetchTreatment(id) {
   const { data } = await http().get(`${endpoints.treatments.getAll}/${id}`);
   return data;
@@ -18,9 +29,9 @@ export async function createTreatmentPlan(data) {
   return resp.data;
 }
 
-export const fetchTreatmentPlans = async (treatementId, params) => {
+export const fetchTreatmentPlans = async (treatmentId, params) => {
   const { data } = await http().get(
-    `${endpoints.treatments.plans}/getByTreatmentId/${treatementId}?${params}`,
+    `${endpoints.treatments.plans}/getByTreatmentId/${treatmentId}?${params}`,
   );
   return data;
 };
@@ -46,9 +57,9 @@ export async function createDentalNote(data) {
   return resp.data;
 }
 
-export const fetchDentalNotes = async (treatementId, params) => {
+export const fetchDentalNotes = async (patientId, params) => {
   const { data } = await http().get(
-    `${endpoints.treatments.dentalNotes}/getByTreatmentId/${treatementId}?${params}`,
+    `${endpoints.treatments.dentalNotes}/getByPatientId/${patientId}?${params}`,
   );
   return data;
 };
@@ -88,9 +99,9 @@ export async function createNote(data) {
   return resp.data;
 }
 
-export const fetchNotes = async (treatementId, params) => {
+export const fetchNotes = async (patientId, params) => {
   const { data } = await http().get(
-    `${endpoints.treatments.notes}/getByTreatmentId/${treatementId}?${params}`,
+    `${endpoints.treatments.notes}/getByPatientId/${patientId}?${params}`,
   );
   return data;
 };
@@ -148,9 +159,9 @@ export async function createDocument(data) {
   return resp.data;
 }
 
-export const fetchDocuments = async (treatementId, params) => {
+export const fetchDocuments = async (patientId, params) => {
   const { data } = await http().get(
-    `${endpoints.treatments.documents}/getByTreatmentId/${treatementId}?${params}`,
+    `${endpoints.treatments.documents}/getByPatientId/${patientId}?${params}`,
   );
   return data;
 };
@@ -253,10 +264,36 @@ export async function createPayment(data) {
   const resp = await http().post(`${endpoints.treatments.payments}`, data);
   return resp.data;
 }
-
+export async function updateTreatment(treatmentId, data) {
+  return await http().put(
+    `${endpoints.treatments.getAll}/${treatmentId}`,
+    data,
+  );
+}
 export const fetchPayments = async (treatementId, params) => {
   const { data } = await http().get(
     `${endpoints.treatments.payments}/getByTreatmentId/${treatementId}?${params}`,
+  );
+  return data;
+};
+
+export const fetchPaymentsByPatient = async (patientId, params) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.payments}/getByPatientId/${patientId}?${params}`,
+  );
+  return data;
+};
+
+export const fetchAccounts = async (clinicId) => {
+  return await http().get(
+    `${endpoints.treatments.payments}/accounts/${clinicId}`,
+  );
+  return data;
+};
+
+export const fetchRemainingPayment = async (treatementId) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.payments}/getRemainingPayment/${treatementId}`,
   );
   return data;
 };

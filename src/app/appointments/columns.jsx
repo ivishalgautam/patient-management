@@ -49,7 +49,12 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
     header: "NAME",
     cell: ({ row }) => {
       const patientName = row.getValue("patient_name");
-      return <span className="capitalize">{patientName}</span>;
+      const patientId = row.original.patient_id;
+      return (
+        <Link href={`/patients/${patientId}`} className="capitalize">
+          {patientName}
+        </Link>
+      );
     },
   },
   {

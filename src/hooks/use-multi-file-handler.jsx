@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import useLocalStorage from "./use-local-storage";
 import { endpoints } from "@/utils/endpoints";
+import config from "@/config";
 
 const useMultiFileHandler = (key) => {
   const [token] = useLocalStorage("token");
@@ -41,7 +42,7 @@ const useMultiFileHandler = (key) => {
 
   const deleteFile = async (filePath) => {
     try {
-      const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.getFiles}?file_path=${filePath}`;
+      const deleteUrl = `${process.env.NEXT_PUBLIC_DRDIPTI_API_URL}${endpoints.files.getFiles}?file_path=${filePath}`;
       await axios.delete(deleteUrl);
 
       setImages((prev) => prev.filter((image) => image !== filePath));
@@ -61,7 +62,7 @@ const useMultiFileHandler = (key) => {
   ) => {
     try {
       const selectedFiles = Array.from(event.target.files);
-      const uploadUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.upload}`;
+      const uploadUrl = `${config.api_base}${endpoints.files.upload}`;
 
       const uploadedFiles = await uploadFiles(selectedFiles, uploadUrl);
 

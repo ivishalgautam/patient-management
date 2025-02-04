@@ -52,11 +52,11 @@ const useFileHandler = () => {
   ) => {
     try {
       const selectedFile = event.target.files[0];
-      const uploadUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.upload}`;
+      const uploadUrl = `${process.env.NEXT_PUBLIC_DRDIPTI_API_URL}${endpoints.files.upload}`;
       const file = await uploadFile(selectedFile, uploadUrl);
 
       if (image) {
-        const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.getFiles}`;
+        const deleteUrl = `${process.env.NEXT_PUBLIC_DRDIPTI_API_URL}${endpoints.files.getFiles}`;
         await deleteFile(image, deleteUrl);
       }
       console.log({ file });
