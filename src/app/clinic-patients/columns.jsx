@@ -87,7 +87,7 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     enableHiding: false,
     cell: ({ row }) => {
       const id = row.original.id;
-      const role = row.original.role;
+      const user_id = row.original.user_id;
       const username = row.getValue("username");
       return (
         <DropdownMenu>
@@ -107,7 +107,7 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/users/edit/${id}/patient`}>Edit</Link>
+              <Link href={`/users/edit/${user_id}/patient`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
