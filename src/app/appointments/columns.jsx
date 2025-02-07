@@ -143,7 +143,7 @@ const statuses = [
     label: (
       <span className="flex items-center gap-2">
         <StatusDot className="text-emerald-600" />
-        <span className="truncate">Completed</span>
+        <span className="truncate">Start</span>
       </span>
     ),
   },
