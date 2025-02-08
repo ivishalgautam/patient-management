@@ -105,8 +105,6 @@ export default function TreatmentPlanForm({
     setValue("affected_tooths", toothsToSet);
   };
 
-  console.log({ errors });
-
   const onSubmit = async (data) => {
     const payload = {
       patient_id: patientId,
