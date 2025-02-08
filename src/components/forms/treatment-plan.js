@@ -15,7 +15,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { createTreatmentPlan, fetchTreatmentPlan } from "@/server/treatment";
 import { Textarea } from "../ui/textarea";
-import { treatmentPlanSchema } from "@/validation-schemas/treatment-plan";
+import {
+  treatmentPlanEditSchema,
+  treatmentPlanSchema,
+} from "@/validation-schemas/treatment-plan";
 import {
   paths,
   svgFill,
@@ -47,7 +50,9 @@ export default function TreatmentPlanForm({
   const [, rerender] = useState(false);
   const queryClient = useQueryClient();
   const form = useForm({
-    resolver: zodResolver(treatmentPlanSchema),
+    resolver: zodResolver(
+      type === "create" ? treatmentPlanSchema : treatmentPlanEditSchema,
+    ),
     defaultValues: {
       patient_id: patientId,
       affected_tooths: [],
@@ -99,6 +104,8 @@ export default function TreatmentPlanForm({
 
     setValue("affected_tooths", toothsToSet);
   };
+
+  console.log({ errors });
 
   const onSubmit = async (data) => {
     const payload = {
@@ -266,7 +273,7 @@ export default function TreatmentPlanForm({
                                   <Textarea
                                     {...register(`notes.${ind}.note`)}
                                     placeholder="Enter notes"
-                                    className="h-44"
+                                    // className="h"
                                   />
                                   {errors?.notes?.[ind]?.note && (
                                     <span className="text-sm text-red-500">
