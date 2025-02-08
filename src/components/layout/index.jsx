@@ -51,7 +51,6 @@ export default function Layout({ children }) {
       router.replace("/unauthorized");
     }
   }, [pathname, id, router]);
-
   const getContent = () => {
     if (publicRoutes.includes(pathname)) {
       return children;
