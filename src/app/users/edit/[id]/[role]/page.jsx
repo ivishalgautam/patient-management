@@ -1,6 +1,7 @@
 "use client";
 import DoctorCreateForm from "@/components/forms/doctor";
 import PatientCreateForm from "@/components/forms/patient";
+import UserForm from "@/components/forms/user";
 import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
 import { updateUser } from "@/server/users";
@@ -29,7 +30,7 @@ export default function Page({ params: { id, role } }) {
           updateMutation={updateMutation}
         />
       ) : (
-        ""
+        <UserForm id={id} type="edit" updateMutation={updateMutation} />
       )}
     </PageContainer>
   );

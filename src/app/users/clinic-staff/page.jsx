@@ -20,17 +20,11 @@ export default async function Users({ searchParams }) {
 
   return (
     <PageContainer>
-      <div className="flex items-start justify-between">
+      <div className="">
         <Heading
           title="Staff"
           description="Manage staff (Create, Update, Delete)."
         />
-        <Link
-          href={"/users/create/staff"}
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
-          <Plus /> Create
-        </Link>
       </div>
       <UserTableActions />
       <Suspense
