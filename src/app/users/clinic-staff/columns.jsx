@@ -46,27 +46,27 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     accessorKey: "email",
     header: "EMAIL",
   },
-  {
-    accessorKey: "is_active",
-    header: ({ column }) => {
-      return <Button variant="ghost">STATUS</Button>;
-    },
-    cell: ({ row }) => {
-      const is_active = row.getValue("is_active");
-      const id = row.original.id;
-      return (
-        <div className="flex items-center justify-start gap-2">
-          <Switch
-            checked={is_active}
-            onCheckedChange={() => handleUserStatus(id, !is_active)}
-          />
-          <Small className={is_active ? "text-green-500" : "text-red-500"}>
-            {is_active ? "active" : "inactive"}
-          </Small>
-        </div>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "is_active",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">STATUS</Button>;
+  //   },
+  //   cell: ({ row }) => {
+  //     const is_active = row.getValue("is_active");
+  //     const id = row.original.id;
+  //     return (
+  //       <div className="flex items-center justify-start gap-2">
+  //         <Switch
+  //           checked={is_active}
+  //           onCheckedChange={() => handleUserStatus(id, !is_active)}
+  //         />
+  //         <Small className={is_active ? "text-green-500" : "text-red-500"}>
+  //           {is_active ? "active" : "inactive"}
+  //         </Small>
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "created_at",
     header: ({ column }) => {
