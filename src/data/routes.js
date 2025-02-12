@@ -76,6 +76,12 @@ export const sidebarData = [
         roles: [ROLES.ADMIN, ROLES.DOCTOR],
         isVisible: false,
       },
+      {
+        title: "Edit Patient",
+        url: "/users/edit/[id]/staff",
+        roles: [ROLES.ADMIN, ROLES.DOCTOR, ROLES.STAFF],
+        isVisible: false,
+      },
     ],
   },
   {
