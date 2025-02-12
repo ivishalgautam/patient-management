@@ -8,6 +8,7 @@ import { DataTable } from "@/components/ui/table/data-table";
 import React from "react";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import {
+  deleteClinicStaff,
   deleteUser,
   fetchClinicStaff,
   fetchStaff,
@@ -44,7 +45,7 @@ export default function UserListing() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ id }) => deleteUser(id),
+    mutationFn: ({ id }) => deleteClinicStaff(id),
     onSuccess: () => {
       toast.success("Staff deleted.");
       queryClient.invalidateQueries(["staff"]);
@@ -102,7 +103,7 @@ export default function UserListing() {
   if (isError) return error?.message ?? "error";
 
   return (
-    <div className="w-full rounded-lg border-input">
+    <div className="border-input w-full rounded-lg">
       <DataTable
         columns={columns(handleUserStatus, setUserId, () => setIsModal(true))}
         data={data?.staff}
