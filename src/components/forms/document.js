@@ -108,16 +108,27 @@ export default function DocumentForm({
 
           <div className="space-y-4">
             <div className="flex flex-col items-center justify-center">
-              <Input
-                type="file"
-                {...register("files", {
-                  required: "required*",
-                })}
-                placeholder="Select Image"
-                multiple={true}
-                accept="image/png, image/jpeg, image/jpg, image/webp"
-                className={`max-w-56`}
-              />
+              {type === "create" ? (
+                <Input
+                  type="file"
+                  {...register("files", {
+                    required: "required*",
+                  })}
+                  placeholder="Select Image"
+                  multiple={true}
+                  accept="image/png, image/jpeg, image/jpg, image/webp"
+                  className={`max-w-56`}
+                />
+              ) : (
+                <Input
+                  type="file"
+                  {...register("files")}
+                  placeholder="Select Image"
+                  multiple={true}
+                  accept="image/png, image/jpeg, image/jpg, image/webp"
+                  className={`max-w-56`}
+                />
+              )}
               {errors.files && (
                 <span className="text-sm text-red-500">
                   {errors.files.message}
