@@ -155,7 +155,11 @@ export async function updateXray(id, data) {
 
 // documents
 export async function createDocument(data) {
-  const resp = await http().post(`${endpoints.treatments.documents}`, data);
+  const resp = await http().post(
+    `${endpoints.treatments.documents}`,
+    data,
+    true,
+  );
   return resp.data;
 }
 
@@ -182,6 +186,7 @@ export async function updateDocument(id, data) {
   const resp = await http().put(
     `${endpoints.treatments.documents}/${id}`,
     data,
+    true,
   );
   return resp.data;
 }

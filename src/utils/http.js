@@ -93,8 +93,12 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
     });
   }
 
-  function put(path, payload) {
-    return client.put(path, payload).then((response) => response.data);
+  function put(path, payload, isFormData = false) {
+    let config = {};
+    if (isFormData) {
+      config.headers = { "Content-Type": "multipart/form-data" };
+    }
+    return client.put(path, payload, config).then((response) => response.data);
   }
 
   function patch(path, payload) {

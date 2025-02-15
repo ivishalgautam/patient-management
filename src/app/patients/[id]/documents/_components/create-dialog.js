@@ -12,8 +12,8 @@ export function CreateDialog({ isOpen, setIsOpen, patientId }) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create note.</DialogTitle>
-          <DialogDescription>You can create a note.</DialogDescription>
+          <DialogTitle>Create document.</DialogTitle>
+          <DialogDescription>You can create a document.</DialogDescription>
         </DialogHeader>
         <DocumentForm patientId={patientId} closeDialog={setIsOpen} />
       </DialogContent>

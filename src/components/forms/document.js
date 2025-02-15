@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import Spinner from "../Spinner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   createDocument,
   createXray,
@@ -21,6 +21,7 @@ import { Trash } from "lucide-react";
 import config from "@/config";
 import Image from "next/image";
 import { documentSchema } from "@/validation-schemas/document";
+import useMultiFileHandler from "@/hooks/use-multi-file-handler";
 
 export default function DocumentForm({
   type = "create",
@@ -37,15 +38,16 @@ export default function DocumentForm({
     formState: { errors },
     setValue,
   } = useForm({
-    resolver: zodResolver(documentSchema),
-    defaultValues: { patient_id: patientId, affected_tooth: affectedTooth },
+    defaultValues: { patient_id: patientId },
   });
+  const [docs, setDocs] = useState([]);
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => fetchDocument(id),
     queryKey: [`document-${id}`],
     enabled: !!id && !!(type === "edit"),
   });
-  const { handleFileChange, deleteFile, image, setImage } = useFileHandler();
+  const { handleFileChange, deleteFile, image, setImage } =
+    useMultiFileHandler();
   const createMutation = useMutation({
     mutationFn: createDocument,
     onSuccess: (data) => {
@@ -56,29 +58,33 @@ export default function DocumentForm({
   });
 
   const onSubmit = async (data) => {
-    const payload = {
-      patient_id: patientId,
-      title: data.title,
-      document: image,
-      notes: data.notes,
-    };
+    const formData = new FormData();
+    const selectedFiles = Array.from(data.files);
+
+    selectedFiles.forEach((file) => {
+      formData.append("file", file);
+    });
+
+    formData.append("patient_id", data.patient_id);
+    formData.append("title", data.title);
 
     if (type === "edit") {
-      updateMutation.mutate(payload);
+      formData.append("documents", JSON.stringify(docs));
+      console.log(formData);
+      updateMutation.mutate(formData);
     }
     if (type === "create") {
-      createMutation.mutate(payload);
+      createMutation.mutate(formData);
     }
   };
 
   useEffect(() => {
     if (data) {
       setValue("title", data.title);
-      setValue("document", data.document);
-      setImage(data.document);
+      setDocs(data.documents);
     }
-  }, [data, setValue]);
-
+  }, [data, setValue, setImage]);
+  console.log({ docs });
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError) return error?.message ?? "error";
 
@@ -88,8 +94,13 @@ export default function DocumentForm({
         <div className="w-full space-y-2">
           {/* title */}
           <div>
-            <Label>Notes</Label>
-            <Input {...register("title")} placeholder="Enter title" />
+            <Label>Note</Label>
+            <Input
+              {...register("title", {
+                required: "required*",
+              })}
+              placeholder="Enter note"
+            />
             {errors.title && (
               <span className="text-red-500">{errors.title.message}</span>
             )}
@@ -99,47 +110,44 @@ export default function DocumentForm({
             <div className="flex flex-col items-center justify-center">
               <Input
                 type="file"
+                {...register("files", {
+                  required: "required*",
+                })}
                 placeholder="Select Image"
-                onChange={(e) => {
-                  handleFileChange(
-                    e,
-                    "document",
-                    setValue,
-                    type === "edit" ? updateMutation.mutate : null,
-                    type,
-                  );
-                }}
-                multiple={false}
+                multiple={true}
                 accept="image/png, image/jpeg, image/jpg, image/webp"
                 className={`max-w-56`}
               />
-              {errors.document && (
+              {errors.files && (
                 <span className="text-sm text-red-500">
-                  {errors.document.message}
+                  {errors.files.message}
                 </span>
               )}
             </div>
             <div className="flex items-center justify-center gap-4 rounded-lg border border-dashed border-gray-300 p-8">
-              {image ? (
-                <figure className="relative size-32">
-                  <Image
-                    src={`${config.file_base}/${image}`}
-                    width={500}
-                    height={500}
-                    alt="image"
-                    className="h-full w-full"
-                    onError={() => setImage(null)}
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => deleteFile(image, setValue, "document")}
-                    className="absolute -top-2 -right-2"
-                    size="icon"
-                  >
-                    <Trash size={20} />
-                  </Button>
-                </figure>
+              {docs.length > 0 ? (
+                docs.map((doc, ind) => (
+                  <figure className="relative size-32" key={ind}>
+                    <Image
+                      src={`${config.file_base}/${doc}`}
+                      width={500}
+                      height={500}
+                      alt="image"
+                      className="h-full w-full"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() =>
+                        setDocs((prev) => prev.filter((i) => i !== doc))
+                      }
+                      className="absolute -top-2 -right-2"
+                      size="icon"
+                    >
+                      <Trash size={20} />
+                    </Button>
+                  </figure>
+                ))
               ) : (
                 <div>No file selected</div>
               )}

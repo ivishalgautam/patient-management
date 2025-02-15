@@ -20,7 +20,7 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
     header: "TITLE",
   },
   {
-    accessorKey: "document",
+    accessorKey: "documents",
     header: ({ column }) => {
       return (
         <Button
@@ -33,8 +33,15 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
       );
     },
     cell: (row) => {
-      const document = row.getValue("document");
-      return <TableImage src={document} />;
+      const documents = row.getValue("documents");
+
+      return (
+        <div className="flex items-center justify-start gap-1">
+          {documents.map((doc, ind) => (
+            <TableImage key={ind} src={doc} />
+          ))}
+        </div>
+      );
     },
   },
   {
