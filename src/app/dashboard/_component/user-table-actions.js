@@ -5,6 +5,7 @@ import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-fil
 import Link from "next/link";
 import { Calendar, UserPlus } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function UserTableActions() {
   const {
@@ -25,13 +26,16 @@ export default function UserTableActions() {
       />
       <Link
         href={"/users/create/patient"}
-        className={buttonVariants({ variant: "outline" })}
+        className={buttonVariants({ variant: "" })}
       >
         <UserPlus size={20} /> Add Patient
       </Link>
       <Link
         href={"/appointments/create"}
-        className={buttonVariants({ variant: "outline" })}
+        className={cn(
+          buttonVariants({ variant: "primary" }),
+          "bg-blue-500 text-white hover:bg-blue-500/90",
+        )}
       >
         <Calendar size={20} /> Add Appointment
       </Link>
