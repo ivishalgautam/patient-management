@@ -16,6 +16,8 @@ import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
 import UserListing from "./_component/user-listing";
 import Link from "next/link";
 import moment from "moment";
+import Table from "./_component/table";
+import Spinner from "@/components/Spinner";
 
 const getReports = async (clinicId) => {
   const { data } = await http().get(`${endpoints.reports.getAll}/${clinicId}`);
@@ -81,11 +83,10 @@ export default function Home() {
         <div className="flex items-start justify-between">
           <Heading title="Patients" />
         </div>
-        <UserTableActions />
         <Suspense
           fallback={<DataTableSkeleton columnCount={4} rowCount={10} />}
         >
-          <UserListing />
+          <Table />
         </Suspense>
       </PageContainer>
     </div>
