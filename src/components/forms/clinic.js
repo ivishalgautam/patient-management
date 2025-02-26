@@ -39,7 +39,6 @@ export default function ClinicForm({ type = "create", id, updateMutation }) {
   });
 
   const onSubmit = async (data) => {
-    console.log({ data });
     const payload = {
       name: data.name,
       address: data.address,

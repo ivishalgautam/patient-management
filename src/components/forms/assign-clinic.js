@@ -53,7 +53,6 @@ export default function AssignClinicForm({ staffId, closeDialog }) {
   });
 
   const onSubmit = async (data) => {
-    console.log({ data });
     const payload = {
       clinic_id: data.clinic.value,
       staff_id: staffId,

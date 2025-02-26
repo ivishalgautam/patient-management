@@ -29,9 +29,8 @@ export const updateBooking = async (id, formData) => {
 };
 
 export const updateBookingStatus = async (id, formData) => {
-  const { data } = await http().put(
+  return await http().put(
     `${endpoints.bookings.getAll}/status/${id}`,
     formData,
   );
-  return data;
 };

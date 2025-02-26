@@ -59,7 +59,6 @@ const useFileHandler = () => {
         const deleteUrl = `${process.env.NEXT_PUBLIC_DRDIPTI_API_URL}${endpoints.files.getFiles}`;
         await deleteFile(image, deleteUrl);
       }
-      console.log({ file });
       setImage(file);
       setValue(name, file);
 

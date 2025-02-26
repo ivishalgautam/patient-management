@@ -26,6 +26,8 @@ import { Pagination } from "@/components/pagination";
 import { useTableFilters } from "./use-table-filters";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
+import { CreateDialog } from "./create-dialog";
+import { PlusIcon } from "lucide-react";
 
 export default function Listing({ patientId }) {
   const [isModal, setIsModal] = useState(false);
@@ -51,26 +53,9 @@ export default function Listing({ patientId }) {
     ],
     enabled: !!searchParamsStr && !!clinic?.id && !!patientId,
   });
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { setPage } = useTableFilters();
-
-  const deleteMutation = useMutation({
-    mutationFn: ({ id }) => deleteTreatment(id),
-    onSuccess: () => {
-      toast.success("Patient deleted.");
-      queryClient.invalidateQueries([`treatments-${clinic.id}-${patientId}`]);
-    },
-    onError: (error) => {
-      toast.error(error?.message ?? "error deleting!");
-    },
-    onSettled: () => {
-      setIsModal(false);
-    },
-  });
-
-  const handleDelete = async (id) => {
-    deleteMutation.mutate({ id });
-  };
 
   const updateMutation = useMutation({
     mutationFn: (data) =>
@@ -103,6 +88,15 @@ export default function Listing({ patientId }) {
 
   return (
     <div className="border-input w-full space-y-4 rounded-lg">
+      <div className="text-end">
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => setIsCreateOpen(true)}
+        >
+          <PlusIcon /> Add Treatment
+        </Button>
+      </div>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
         {data?.treatments?.map((treatment) => (
           <Link
@@ -122,38 +116,13 @@ export default function Listing({ patientId }) {
         currentPage={Number(searchParams.get("page") ?? 0)}
         onPageChange={setPage}
       />
-      {/* <DataTable
-        columns={columns(handleUserStatus, setUserId, () => setIsModal(true))}
-        data={data?.treatments}
-        totalItems={data?.total}
-      /> */}
-      <UserDeleteDialog
-        handleDelete={() => handleDelete(userId)}
-        isOpen={isModal}
-        setIsOpen={setIsModal}
+      <CreateDialog
+        {...{
+          isOpen: isCreateOpen,
+          setIsOpen: setIsCreateOpen,
+          patientId,
+        }}
       />
     </div>
-  );
-}
-
-export function UserDeleteDialog({ isOpen, setIsOpen, handleDelete }) {
-  return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this
-            user.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 }

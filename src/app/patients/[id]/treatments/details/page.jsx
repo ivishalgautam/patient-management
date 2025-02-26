@@ -42,7 +42,6 @@ export default function TreatmentDetailsPage({ params: { id } }) {
     queryFn: () => fetchTreatment(tid),
     enabled: !!tid,
   });
-  console.log({ data });
   if (isError) return error?.message ?? "error";
 
   return (

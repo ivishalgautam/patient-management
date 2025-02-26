@@ -125,7 +125,6 @@ export default function TreatmentPlanForm({
 
   useEffect(() => {
     if (treatmentPlan) {
-      console.log({ treatmentPlan });
       setValue("affected_tooths", treatmentPlan.affected_tooths);
       setValue("treatment_id", treatmentPlan.treatment_id);
       setValue("notes", treatmentPlan.notes);

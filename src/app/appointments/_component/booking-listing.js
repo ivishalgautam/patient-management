@@ -21,7 +21,7 @@ export default function BookingsListing() {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [`bookings-${clinic.id}`, searchParamsStr],
     queryFn: () => fetchBookingsByClinicId(searchParamsStr, clinic.id),
-    enabled: !!clinic.id,
+    enabled: !!clinic.id && !!searchParamsStr,
   });
 
   const deleteMutation = useMutation(deleteSlotById, {
@@ -36,11 +36,13 @@ export default function BookingsListing() {
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, data }) => updateBookingStatus(id, data),
-    onSuccess: () => {
-      toast.success("Slot updated.");
+    onSuccess: ({ data }) => {
+      if (data.status === "completed") {
+        router.push(`/patients/${data.patient_id}/treatments`);
+      }
+      toast.success("Updated.");
     },
     onMutate: (currData) => {
-      // console.log({ currData });
       const prevData = queryClient.getQueryData([`bookings-${clinic.id}`]);
       queryClient.setQueryData(
         [`bookings-${clinic.id}`, searchParamsStr],
@@ -69,6 +71,7 @@ export default function BookingsListing() {
   const handleStatus = async (id, data) => {
     updateStatusMutation.mutate({ id, data });
   };
+
   const handleDelete = async (data) => {
     const confirmation = confirm("Are you sure?");
     if (confirmation) {
@@ -89,7 +92,7 @@ export default function BookingsListing() {
   if (isError) return error?.message ?? "error";
 
   return (
-    <div className="w-full rounded-lg border-input">
+    <div className="border-input w-full rounded-lg">
       <DataTable
         columns={columns(handleStatus, handleDelete)}
         data={data?.bookings ?? []}

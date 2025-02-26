@@ -70,7 +70,6 @@ export default function DocumentForm({
 
     if (type === "edit") {
       formData.append("documents", JSON.stringify(docs));
-      console.log(formData);
       updateMutation.mutate(formData);
     }
     if (type === "create") {
@@ -84,7 +83,6 @@ export default function DocumentForm({
       setDocs(data.documents);
     }
   }, [data, setValue, setImage]);
-  console.log({ docs });
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError) return error?.message ?? "error";
 

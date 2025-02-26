@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import StatusDot from "@/components/ui/status-dot";
+import { cn } from "@/lib/utils";
 
 export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
   {
@@ -29,8 +30,15 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
     header: "DATE",
     cell: ({ row }) => {
       const date = row.getValue("date");
+      const status = row.getValue("status");
       return (
-        <Badge variant={"secondary"}>
+        <Badge
+          className={cn({
+            "bg-emerald-500 hover:bg-emerald-500/90": status === "completed",
+            "bg-orange-500 hover:bg-orange-500/90": status === "pending",
+            "bg-red-500 hover:bg-red-500/90": status === "canceled",
+          })}
+        >
           {moment(date).format("ddd, DD MMM YYYY")}
         </Badge>
       );
@@ -41,7 +49,7 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
     header: "SLOT",
     cell: ({ row }) => {
       const slot = row.getValue("slot");
-      return <Badge variant={""}>{slot}</Badge>;
+      return <Badge variant={"outline"}>{slot}</Badge>;
     },
   },
   {
@@ -51,9 +59,14 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
       const patientName = row.getValue("patient_name");
       const patientId = row.original.patient_id;
       return (
-        <Link href={`/patients/${patientId}`} className="capitalize">
-          {patientName}
-        </Link>
+        <Badge className={"bg-blue-400"}>
+          <Link
+            href={`/patients/${patientId}/treatments`}
+            className="capitalize"
+          >
+            {patientName}
+          </Link>
+        </Badge>
       );
     },
   },

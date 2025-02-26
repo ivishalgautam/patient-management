@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import BookingsListing from "./_component/booking-listing";
-import SlotActions from "../slots/_component/slot-table-actions";
+import BookingActions from "./_component/booking-table-actions";
 
 export const metadata = {
   title: "Appointments",
@@ -27,7 +27,9 @@ export default async function Users({ searchParams }) {
         />
       </div>
       <div className="flex items-center justify-between">
-        <SlotActions />
+        <div className="shrink-0">
+          <BookingActions />
+        </div>
         <Link
           className={cn(buttonVariants({ variant: "outline" }))}
           href={"/appointments/create"}

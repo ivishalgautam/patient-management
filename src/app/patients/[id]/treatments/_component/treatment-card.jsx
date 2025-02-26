@@ -1,13 +1,4 @@
-import {
-  AlertCircle,
-  Calendar,
-  CalendarIcon,
-  CheckCircle2,
-  CheckCircleIcon,
-  User,
-} from "lucide-react";
-import { format, formatDate } from "date-fns";
-import { Muted } from "@/components/ui/typography";
+import { AlertCircle, Calendar, CheckCircle2, Clock, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -38,10 +29,15 @@ export default function TreatmentCard({ treatment, handleStatusChange }) {
             <Calendar className="mr-2 h-4 w-4" />
             {moment(treatment.created_at).format("DD MMM, YYYY")}
           </div>
+          <div className="text-muted-foreground flex items-center text-sm">
+            <Clock className="mr-2 h-4 w-4" />
+            {moment(treatment.created_at).format("HH:mm:ss A")}
+          </div>
           <div className="mt-4 flex items-center justify-between">
             <Select
               defaultValue={treatment.status}
               onValueChange={(value) => handleStatusChange(treatment.id, value)}
+              disabled={treatment.status === "close"}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue />

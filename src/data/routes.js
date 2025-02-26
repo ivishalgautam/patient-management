@@ -353,10 +353,10 @@ export const sidebarData = [
         isVisible: true,
       },
       {
-        title: "Create Appointments",
+        title: "Add",
         url: "/appointments/create",
         roles: [ROLES.DOCTOR, ROLES.STAFF],
-        isVisible: false,
+        isVisible: true,
       },
     ],
   },

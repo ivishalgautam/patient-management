@@ -2,14 +2,15 @@
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { useTableFilters } from "./use-table-filters";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
+import { CreateDialog } from "./create-dialog";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
 export default function TableActions() {
   const {
     resetFilters,
     searchQuery,
     setSearchQuery,
-    username,
-    setUsername,
     setPage,
     isAnyFilterActive,
   } = useTableFilters();

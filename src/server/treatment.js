@@ -29,6 +29,11 @@ export async function createTreatmentPlan(data) {
   return resp.data;
 }
 
+export async function createTreatment(data) {
+  const resp = await http().post(`${endpoints.treatments.getAll}`, data);
+  return resp.data;
+}
+
 export const fetchTreatmentPlans = async (treatmentId, params) => {
   const { data } = await http().get(
     `${endpoints.treatments.plans}/getByTreatmentId/${treatmentId}?${params}`,

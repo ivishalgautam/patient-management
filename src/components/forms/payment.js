@@ -48,8 +48,6 @@ export default function PaymentForm({
     defaultValues: { treatment_id: treatmentId ? treatmentId : "" },
   });
 
-  console.log(watch("treatment_id"));
-
   const { clinic } = useContext(ClinicContext);
   const { data: treatments } = useFetchPatientTreatments(patientId, clinic.id);
 
