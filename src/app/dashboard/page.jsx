@@ -5,21 +5,16 @@ import { endpoints } from "@/utils/endpoints";
 import http from "@/utils/http";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  CalendarDays,
-  IndianRupee,
-  Link2,
-  User,
-  UserPlus,
-  Users,
-} from "lucide-react";
-import { useContext } from "react";
+import { CalendarDays, IndianRupee, User } from "lucide-react";
+import { Suspense, useContext } from "react";
 import { MainContext } from "@/store/context";
 import { ClinicContext } from "@/store/clinic-context";
 import { rupee } from "@/lib/Intl";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import UserTableActions from "./_component/user-table-actions";
+import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
+import UserListing from "./_component/user-listing";
+import Link from "next/link";
 import moment from "moment";
 
 const getReports = async (clinicId) => {
@@ -82,103 +77,16 @@ export default function Home() {
         )}
       </PageContainer>
 
-      <PageContainer className={"space-y-4 bg-transparent p-0 shadow-none"}>
-        <Heading title={"Quick Access"} description={""} />
-        <GridContainer
-          className={"grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"}
+      <PageContainer>
+        <div className="flex items-start justify-between">
+          <Heading title="Patients" />
+        </div>
+        <UserTableActions />
+        <Suspense
+          fallback={<DataTableSkeleton columnCount={4} rowCount={10} />}
         >
-          <div className="hover:border-primary flex flex-col items-center justify-center rounded-lg border bg-white p-6 py-3 shadow">
-            <div className="inline-block rounded-full border bg-white p-3">
-              {<Users size={20} className="text-primary" />}
-            </div>
-            <div className="mb-3 flex flex-col items-start justify-start">
-              <span className="text-base font-medium text-black">
-                Clinic Patients
-              </span>
-            </div>
-            <Link
-              href={"/clinic-patients"}
-              className={cn(
-                buttonVariants({ variant: "priammry" }),
-                "h-8 cursor-pointer bg-gray-500 text-white hover:bg-gray-500/80 hover:text-white",
-              )}
-              type="button"
-              variant="outline"
-            >
-              View
-              <Link2 />
-            </Link>
-          </div>
-
-          <div className="hover:border-primary flex flex-col items-center justify-center rounded-lg border bg-white p-6 py-3 shadow">
-            <div className="inline-block rounded-full border bg-white p-3">
-              <UserPlus size={20} className="text-primary" />
-            </div>
-            <div className="mb-3 flex flex-col items-start justify-start">
-              <span className="text-base font-medium text-black">
-                Add Patient
-              </span>
-            </div>
-            <Link
-              href={"/users/create/patient"}
-              className={cn(
-                buttonVariants({ variant: "priammry" }),
-                "h-8 cursor-pointer bg-gray-500 text-white hover:bg-gray-500/80 hover:text-white",
-              )}
-              type="button"
-              variant="outline"
-            >
-              Create
-              <Link2 />
-            </Link>
-          </div>
-
-          <div className="hover:border-primary flex flex-col items-center justify-center rounded-lg border bg-white p-6 py-3 shadow">
-            <div className="inline-block rounded-full border bg-white p-3">
-              <CalendarDays size={20} className="text-primary" />
-            </div>
-            <div className="mb-3 flex flex-col items-start justify-start">
-              <span className="text-base font-medium text-black">
-                Add Appointment
-              </span>
-            </div>
-            <Link
-              href={"/users/create/patient"}
-              className={cn(
-                buttonVariants({ variant: "priammry" }),
-                "h-8 cursor-pointer bg-gray-500 text-white hover:bg-gray-500/80 hover:text-white",
-              )}
-              type="button"
-              variant="outline"
-            >
-              Create
-              <Link2 />
-            </Link>
-          </div>
-
-          <div className="hover:border-primary flex flex-col items-center justify-center rounded-lg border bg-white p-6 py-3 shadow">
-            <div className="inline-block rounded-full border bg-white p-3">
-              <CalendarDays size={20} className="text-primary" />
-            </div>
-            <div className="mb-3 flex flex-col items-start justify-start">
-              <span className="text-base font-medium text-black">
-                Taday Appointments
-              </span>
-            </div>
-            <Link
-              href={`/appointments?page=1&limit=10&start_date=${moment().format("YYYY-MM-DD")}&end_date=${moment().format("YYYY-MM-DD")}`}
-              className={cn(
-                buttonVariants({ variant: "priammry" }),
-                "h-8 cursor-pointer bg-gray-500 text-white hover:bg-gray-500/80 hover:text-white",
-              )}
-              type="button"
-              variant="outline"
-            >
-              View
-              <Link2 />
-            </Link>
-          </div>
-        </GridContainer>
+          <UserListing />
+        </Suspense>
       </PageContainer>
     </div>
   );
@@ -191,11 +99,15 @@ function Reports({ data, isError, isLoading, error }) {
 
   return (
     <GridContainer>
-      <Card
-        count={data?.today_appointments}
-        title={"Today Appointments"}
-        icon={CalendarDays}
-      />
+      <Link
+        href={`/appointments?page=1&limit=10&start_date=${moment().format("YYYY-MM-DD")}&end_date=${moment().format("YYYY-MM-DD")}`}
+      >
+        <Card
+          count={data?.today_appointments}
+          title={"Today Appointments"}
+          icon={CalendarDays}
+        />
+      </Link>
       <Card
         count={data?.today_patients}
         title={"New Patients Today"}
