@@ -189,28 +189,41 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
                 <Label>Slots</Label>
                 {slots.length ? (
                   <div className="flex flex-wrap items-center justify-start gap-1">
-                    {slots.map((slot) => (
-                      <Badge
-                        key={slot.toString()}
-                        variant={
-                          selectedSlot === slot
-                            ? "default"
-                            : blockedSlots?.data?.slots?.includes(slot)
-                              ? "destructive"
-                              : blockedSlots?.booked?.includes(slot)
-                                ? "secondary"
-                                : "outline"
-                        }
-                        className={cn("cursor-pointer px-4 py-2", {
-                          "pointer-events-none":
-                            blockedSlots?.data?.slots?.includes(slot) ||
-                            blockedSlots?.booked?.includes(slot),
-                        })}
-                        onClick={() => setValue("slot", slot)}
-                      >
-                        {slot}
-                      </Badge>
-                    ))}
+                    {slots.map((slot) => {
+                      const isTimeLeft =
+                        moment(
+                          moment(selectedDay).format("YYYY-MM-DD") + " " + slot,
+                        ) < moment();
+                      const isSlotBlocked =
+                        blockedSlots?.data?.slots?.includes(slot);
+                      const isSlotBooked = blockedSlots?.booked?.includes(slot);
+
+                      return (
+                        <Badge
+                          key={slot.toString()}
+                          variant={
+                            selectedSlot === slot
+                              ? "default"
+                              : isSlotBlocked
+                                ? "destructive"
+                                : isSlotBooked || isTimeLeft
+                                  ? "secondary"
+                                  : "outline"
+                          }
+                          className={cn("cursor-pointer px-4 py-2", {
+                            "cursor-not-allowed":
+                              isSlotBlocked || isSlotBooked || isTimeLeft,
+                          })}
+                          onClick={() => {
+                            if (isSlotBlocked || isSlotBooked || isTimeLeft)
+                              return;
+                            setValue("slot", slot);
+                          }}
+                        >
+                          {slot}
+                        </Badge>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p>No Available slots.</p>
