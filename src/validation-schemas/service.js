@@ -16,11 +16,7 @@ export const serviceSchema = z.object({
     .number({ required_error: "Actual price is required." })
     .min(1, { message: "Actual price is required." }),
   discounted_price: z.number().optional(),
-  main_points: z
-    .array(z.string(), {
-      required_error: "Main points are required.",
-    })
-    .min(2, { message: "Main points must have at least 2 items." }),
+  main_points: z.array(z.string()).optional(),
   custom_points: z
     .array(
       z.object({
@@ -37,5 +33,5 @@ export const serviceSchema = z.object({
         required_error: "Custom points are required.",
       },
     )
-    .min(1, { message: "Custom points must have at least 2 items." }),
+    .optional(),
 });
