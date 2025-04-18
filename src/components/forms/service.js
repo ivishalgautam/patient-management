@@ -236,6 +236,9 @@ export default function ServiceForm({
                   />
                 )}
               />
+              {errors.procedure && (
+                <span className="text-red-500">{errors.procedure.message}</span>
+              )}
             </div>
 
             {/* actual price */}

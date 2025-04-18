@@ -12,10 +12,10 @@ export const serviceSchema = z.object({
     .string({ required_error: "Service name is required." })
     .min(1, { message: "Service name is required." }),
   is_featured: z.boolean().optional(),
-  actual_price: z
-    .number({ required_error: "Actual price is required." })
-    .min(1, { message: "Actual price is required." }),
-  discounted_price: z.number().optional(),
+  // actual_price: z
+  //   .number({ required_error: "Actual price is required." })
+  //   .min(1, { message: "Actual price is required." }),
+  // discounted_price: z.number().optional(),
   // main_points: z
   //   .array(z.string(), {
   //     required_error: "Main points are required.",
