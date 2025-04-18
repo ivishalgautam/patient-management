@@ -62,6 +62,8 @@ export default function ServiceForm({
     resolver: zodResolver(serviceSchema),
     defaultValues,
   });
+
+  console.log({ errors });
   const [customPoints, setCustomPoints] = useState({});
   const [mainPoints, setMainPoints] = useState([]);
   const {
