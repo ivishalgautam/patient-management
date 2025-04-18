@@ -21,13 +21,14 @@ import ReactSelect from "react-select";
 import { fetchService } from "@/server/service";
 
 const defaultValues = {
-  custom_points: [{ heading: "", body: [] }],
+  custom_points: [],
+  // custom_points: [{ heading: "", body: [] }],
   main_points: [],
   image: "",
   name: "",
   is_featured: false,
-  actual_price: null,
-  discounted_price: null,
+  // actual_price: null,
+  // discounted_price: null,
 };
 
 function deleteAndShift(obj, index) {
@@ -100,8 +101,8 @@ export default function ServiceForm({
         "procedure",
         procedures.find((so) => so.value === data.procedure_id),
       );
-      setValue("actual_price", data.actual_price);
-      setValue("discounted_price", data.discounted_price);
+      // setValue("actual_price", data.actual_price);
+      // setValue("discounted_price", data.discounted_price);
 
       setValue("main_points", data.main_points);
 
@@ -236,7 +237,7 @@ export default function ServiceForm({
             </div>
 
             {/* actual price */}
-            <div>
+            {/* <div>
               <Label>Actual price</Label>
               <Input
                 type="number"
@@ -248,10 +249,10 @@ export default function ServiceForm({
                   {errors.actual_price.message}
                 </span>
               )}
-            </div>
+            </div> */}
 
             {/* discounted price */}
-            <div>
+            {/* <div>
               <Label>Discounted price</Label>
               <Input
                 type="number"
@@ -263,7 +264,7 @@ export default function ServiceForm({
                   {errors.discounted_price.message}
                 </span>
               )}
-            </div>
+            </div> */}
 
             {/* Is Featured */}
             <div className="col-span-2 flex items-center space-x-2">

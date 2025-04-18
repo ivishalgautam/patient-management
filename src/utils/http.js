@@ -21,9 +21,6 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
     return response;
   }
 
-  /** Intercept any unauthorized request.
-   * status 401 means either accessToken is expired or invalid
-   * dispatch logout action accordingly **/
   function handleError(error) {
     if (error.response?.status === 401) {
       // Access token is expired or invalid, refresh the token
@@ -32,7 +29,7 @@ const http = (headerType = "json", baseURL = API_ROOT) => {
 
       if (!refreshToken) {
         // Refresh token is missing, logout the user
-        window.location.href = "/";
+        window.location.href = "/login";
         return Promise.reject(error.response.data);
       }
       // Refresh access token
