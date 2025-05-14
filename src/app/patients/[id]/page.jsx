@@ -60,6 +60,7 @@ export default function PatientDetailsPage({ params: { id } }) {
     queryFn: () => getPatientDetailsByPatientAndClinicId(id, clinic.id),
     enabled: !!id && !!clinic?.id,
   });
+
   const pathname = usePathname();
   const {
     examination,
@@ -77,23 +78,23 @@ export default function PatientDetailsPage({ params: { id } }) {
         <div className="flex w-max items-center justify-start gap-4 rounded-lg border p-3">
           <div>
             <ImageWithFallback
-              src={data.avatar}
+              src={data?.avatar}
               width={100}
               height={100}
-              alt={data.fullname}
+              alt={data?.fullname}
               className={"rounded-lg shadow-md"}
             />
           </div>
           <div className="grid grid-cols-2 gap-y-2">
             <div className="capitalize">
-              <Muted>Full Name:</Muted> {data.fullname}
+              <Muted>Full Name:</Muted> {data?.fullname}
             </div>
             <div className="capitalize">
-              <Muted>Contact:</Muted> {data.mobile_number}, &nbsp;
+              <Muted>Contact:</Muted> {data?.mobile_number}, &nbsp;
               {data?.emergency_contact}
             </div>
             <div className="bg-primary/30 border-primary relative flex w-max gap-4 rounded-lg border p-3">
-              {data.cost > 0 && data?.balance <= 0 && (
+              {data?.cost > 0 && data?.balance <= 0 && (
                 <Badge
                   className={
                     "absolute -top-2 -right-2 border-emerald-600 bg-emerald-500"
@@ -104,7 +105,7 @@ export default function PatientDetailsPage({ params: { id } }) {
               )}
               <div className="capitalize">
                 <Muted className={"text-black"}>Total Cost:</Muted>
-                <Badge>{rupee.format(data.cost ?? 0)}</Badge>
+                <Badge>{rupee.format(data?.cost ?? 0)}</Badge>
               </div>
               <div className="capitalize">
                 <Muted className={"text-black"}>Balance:</Muted>
