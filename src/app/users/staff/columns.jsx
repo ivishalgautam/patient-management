@@ -82,7 +82,7 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const id = row.original.user_id;
+      const id = row.original.id;
       const role = row.original.role;
       return (
         <DropdownMenu>

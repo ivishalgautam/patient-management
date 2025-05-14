@@ -17,7 +17,7 @@ export default function ServicesListing() {
   const searchParamStr = searchParams.toString();
   const router = useRouter();
 
-  function openModal() {
+  function openModal(type) {
     if (!type) return toast.warning("Please provide which modal should open!");
     if (type === "delete") {
       setIsDeleteOpen(true);
@@ -61,11 +61,11 @@ export default function ServicesListing() {
   if (isError) error?.message ?? "error";
 
   return (
-    <div className="rounded-lg border-input">
+    <div className="border-input rounded-lg">
       <DataTable
         columns={columns(openModal, setId)}
-        data={data.services ?? []}
-        totalItems={data.total ?? 0}
+        data={data?.services ?? []}
+        totalItems={data?.total ?? 0}
       />
 
       <DeleteDialog
