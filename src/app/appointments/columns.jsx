@@ -24,7 +24,7 @@ import {
 import StatusDot from "@/components/ui/status-dot";
 import { cn } from "@/lib/utils";
 
-export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
+export const columns = (handleStatus) => [
   {
     accessorKey: "date",
     header: "DATE",
@@ -73,18 +73,6 @@ export const columns = (handleStatus, handleDelete, handleAddToTreatment) => [
   {
     accessorKey: "patient_contact",
     header: "CONTACT",
-  },
-  {
-    accessorKey: "service_name",
-    header: "SERVICE",
-    cell: ({ row }) => {
-      const serviceName = row.getValue("service_name");
-      return (
-        <Badge variant={"outline"} className="capitalize">
-          {serviceName}
-        </Badge>
-      );
-    },
   },
   {
     accessorKey: "status",

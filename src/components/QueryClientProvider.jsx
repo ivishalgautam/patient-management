@@ -11,7 +11,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 2,
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
       queryCache: new QueryCache({
         onError: (error, query) => {
           // 🎉 only show error toasts if we already have data in the cache

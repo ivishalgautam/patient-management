@@ -97,7 +97,7 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
       date: formattedSelectedDay,
       slot: data.slot,
       patient_id: data.patient.value,
-      service_id: data.service.value,
+      // service_id: data.service.value,
     };
 
     handleCreate(payload);
@@ -137,9 +137,9 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
             <span className="text-red-500">{errors.patient.message}</span>
           )}
         </div>
-
+        <div></div>
         {/* services */}
-        <div>
+        {/* <div>
           <Label>Service</Label>
           <Controller
             control={control}
@@ -160,7 +160,7 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
           {errors.service && (
             <span className="text-red-500">{errors.service.message}</span>
           )}
-        </div>
+        </div> */}
 
         {/* calendar */}
         <div className="">

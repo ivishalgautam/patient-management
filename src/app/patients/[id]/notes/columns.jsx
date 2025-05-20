@@ -23,24 +23,6 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
     header: "NOTES",
   },
   {
-    accessorKey: "total_cost",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          TOTAL COST
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: (row) => {
-      const totalCost = row.getValue("total_cost");
-      return <div className="capitalize">{rupee.format(totalCost)}</div>;
-    },
-  },
-  {
     accessorKey: "added_by",
     header: ({ column }) => {
       return (
