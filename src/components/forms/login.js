@@ -29,6 +29,7 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
     setValue,
+    control,
   } = useForm();
 
   async function loginUser(credentials) {
