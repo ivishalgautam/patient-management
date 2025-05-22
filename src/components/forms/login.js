@@ -78,10 +78,10 @@ export default function LoginForm() {
           </div>
 
           <div>
-            <Label>Username</Label>
+            <Label>Role</Label>
             <Select onValueChange={(value) => setValue("role", value)}>
               <SelectTrigger className="rounded-full">
-                <SelectValue placeholder="Role" />
+                <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="admin">Admin</SelectItem>
