@@ -12,6 +12,13 @@ import http from "@/utils/http";
 import { endpoints } from "@/utils/endpoints";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -21,6 +28,7 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   async function loginUser(credentials) {
@@ -56,6 +64,7 @@ export default function LoginForm() {
     const payload = {
       username: String(data.username).trim(),
       password: String(data.password).trim(),
+      role: String(data.role).trim(),
     };
 
     await loginUser(payload);
@@ -68,6 +77,19 @@ export default function LoginForm() {
             <H1>Login</H1>
           </div>
 
+          <div>
+            <Label>Username</Label>
+            <Select onValueChange={(value) => setValue("role", value)}>
+              <SelectTrigger className="rounded-full">
+                <SelectValue placeholder="Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="doctor">Doctor</SelectItem>
+                <SelectItem value="staff">Staff</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {/* username */}
           <div>
             <Label>Username</Label>

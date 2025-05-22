@@ -77,10 +77,10 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
     });
   }, []);
 
-  const { data: services, isLoading: isServiceLoading } = useQuery({
-    queryKey: [`services`],
-    queryFn: fetchFormattedServices,
-  });
+  // const { data: services, isLoading: isServiceLoading } = useQuery({
+  //   queryKey: [`services`],
+  //   queryFn: fetchFormattedServices,
+  // });
 
   const handleSelectDate = (date) => {
     setValue("slot", "");
@@ -138,6 +138,7 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
           )}
         </div>
         <div></div>
+
         {/* services */}
         {/* <div>
           <Label>Service</Label>
