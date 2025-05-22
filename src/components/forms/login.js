@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import http from "@/utils/http";
 import { endpoints } from "@/utils/endpoints";
 import { toast } from "sonner";
@@ -79,16 +79,28 @@ export default function LoginForm() {
 
           <div>
             <Label>Role</Label>
-            <Select onValueChange={(value) => setValue("role", value)}>
-              <SelectTrigger className="rounded-full">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="doctor">Doctor</SelectItem>
-                <SelectItem value="staff">Staff</SelectItem>
-              </SelectContent>
-            </Select>
+            <Controller
+              control={control}
+              name="role"
+              rules={{ required: "required*" }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="rounded-full">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="doctor">Doctor</SelectItem>
+                    <SelectItem value="staff">Staff</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.role && (
+              <span className="text-sm text-red-500">
+                {errors.role.message}
+              </span>
+            )}
           </div>
           {/* username */}
           <div>
@@ -101,6 +113,11 @@ export default function LoginForm() {
               placeholder="Enter Your Username"
               className="mt-1 rounded-full bg-gray-100 px-4 py-6"
             />
+            {errors.username && (
+              <span className="text-sm text-red-500">
+                {errors.username.message}
+              </span>
+            )}
           </div>
 
           {/* password */}
@@ -114,6 +131,11 @@ export default function LoginForm() {
               placeholder="Enter your password"
               className="mt-1 rounded-full bg-gray-100 px-4 py-6"
             />
+            {errors.password && (
+              <span className="text-sm text-red-500">
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
           <div className="mt-6! text-end">
