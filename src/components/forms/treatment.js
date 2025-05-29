@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import Spinner from "../Spinner";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { createTreatment } from "@/server/treatment";
 import {
   Select,
@@ -20,6 +20,7 @@ import {
 import useFetchServices from "@/hooks/use-fetch-services";
 import { treatmentSchema } from "@/validation-schemas/treatment";
 import { ClinicContext } from "@/store/clinic-context";
+import ReactSelect from "react-select";
 
 export default function TreatmentForm({
   type = "create",
@@ -39,6 +40,11 @@ export default function TreatmentForm({
   const { clinic } = useContext(ClinicContext);
 
   const { data: treatments, isLoading, isError, error } = useFetchServices();
+  const formattedTreatments = useMemo(() => {
+    return (
+      treatments?.map(({ id: value, name: label }) => ({ value, label })) ?? []
+    );
+  }, [treatments]);
 
   const createMutation = useMutation({
     mutationFn: createTreatment,
@@ -76,18 +82,11 @@ export default function TreatmentForm({
               rules={{ required: "required*" }}
               render={({ field: { onChange, value } }) => {
                 return (
-                  <Select onValueChange={onChange} value={value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Treatment" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {treatments?.map((t) => (
-                        <SelectItem key={t.id} value={t.id}>
-                          {t.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ReactSelect
+                    options={formattedTreatments}
+                    onChange={onChange}
+                    value={value}
+                  />
                 );
               }}
             />
