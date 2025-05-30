@@ -102,7 +102,9 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/patients/${patientId}`}>Treatments</Link>
+              <Link href={`/patients/${patientId}/treatments?page=1&limit=10`}>
+                Treatments
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
