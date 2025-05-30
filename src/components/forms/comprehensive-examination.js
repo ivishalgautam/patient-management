@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "../ui/textarea";
-import { comprehensiveExaminationSchema } from "@/validation-schemas/comprehensive-examination";
 import { Checkbox } from "../ui/checkbox";
 import useMultiFileHandler from "@/hooks/use-multi-file-handler";
 import Image from "next/image";
@@ -18,6 +17,7 @@ import {
   svgSelectedFill,
   svgStroke,
 } from "@/data/dental-chart";
+import { comprehensiveExaminationSchema } from "@/validation-schemas/comprehensive-examination";
 // import { ExaminationContext } from "@/store/examination-context";
 
 export default function ComprehensiveExaminationForm({
@@ -73,12 +73,12 @@ export default function ComprehensiveExaminationForm({
     setValue("affected_tooths", toothsToSet);
   };
   const onSubmit = (data) => {
-    if (!images.length) {
-      return setError("gallery", {
-        type: "custom",
-        message: "Please select gallery",
-      });
-    }
+    // if (!images.length) {
+    //   return setError("gallery", {
+    //     type: "custom",
+    //     message: "Please select gallery",
+    //   });
+    // }
 
     const payload = {
       ...data,
