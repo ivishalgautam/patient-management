@@ -55,7 +55,9 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
     ),
     defaultValues: { role: "patient" },
   });
-  console.log({ errors });
+
+  const router = useRouter();
+
   const { clinic } = useContext(ClinicContext);
   const [render, setRender] = useState(false);
   const { data, isLoading, isError, error } = useQuery({
@@ -68,7 +70,10 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
   const createMutation = useMutation({
     mutationKey: ["create-patient"],
     mutationFn: createUser,
-    onSuccess: () => toast.success("User created."),
+    onSuccess: () => {
+      toast.success("User created.");
+      router.push("/appointments/create");
+    },
     onError: (error) =>
       toast.error(error?.response?.data?.message ?? error?.message ?? "Error"),
   });
