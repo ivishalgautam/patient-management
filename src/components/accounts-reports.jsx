@@ -113,6 +113,34 @@ export default function AccountReports({ data = [] }) {
             </CardContent>
           </Link>
         </Card>
+        <Card>
+          <Link href={"/clinic-patients?payment_status=pending"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Today&apos;s Revenue
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].total_cost_today)}
+              </div>
+            </CardContent>
+          </Link>
+        </Card>
+        <Card>
+          <Link href={"/clinic-patients?payment_status=pending"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Today&apos;s Collection
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].total_payment_received_today)}
+              </div>
+            </CardContent>
+          </Link>
+        </Card>
       </div>
       <Card>
         <CardHeader>
