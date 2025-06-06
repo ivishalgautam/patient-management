@@ -79,16 +79,18 @@ export default function Home() {
         )}
       </PageContainer>
 
-      <PageContainer>
-        <div className="flex items-start justify-between">
-          <Heading title="Patients" />
-        </div>
-        <Suspense
-          fallback={<DataTableSkeleton columnCount={4} rowCount={10} />}
-        >
-          <Table />
-        </Suspense>
-      </PageContainer>
+      {user?.role === "doctor" && (
+        <PageContainer>
+          <div className="flex items-start justify-between">
+            <Heading title="Patients" />
+          </div>
+          <Suspense
+            fallback={<DataTableSkeleton columnCount={4} rowCount={10} />}
+          >
+            <Table />
+          </Suspense>
+        </PageContainer>
+      )}
     </div>
   );
 }

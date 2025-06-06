@@ -66,18 +66,7 @@ export default function AccountReports({ data = [] }) {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Payment Received
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {rupee.format(data[0].total_payment_received)}
-            </div>
-          </CardContent>
-        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -87,6 +76,18 @@ export default function AccountReports({ data = [] }) {
           <CardContent>
             <div className="text-2xl font-bold">
               {rupee.format(data[0].payment_cost_this_month)}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Payment Received
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {rupee.format(data[0].total_payment_received)}
             </div>
           </CardContent>
         </Card>

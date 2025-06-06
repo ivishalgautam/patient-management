@@ -9,17 +9,19 @@ export const patientSchema = z
     mobile_number: z
       .string({ required_error: "Mobile number is required." })
       .min(1, { message: "Mobile number is required." }),
-    email: z.string().optional(),
+    email: z
+      .string({ required_error: "Email is required." })
+      .email("Invalid email format."),
     gender: z.string().optional(),
     dob: z.string().optional(),
-    username: z
-      .string({ required_error: "Username is required.." })
-      .min(3, "Username must be at least 3 characters.")
-      .max(16, "Username must be no more than 16 characters.")
-      .regex(/^[0-9A-Za-z]+$/, "Username must be alphanumeric."),
-    password: z
-      .string({ required_error: "Password is required." })
-      .min(1, { message: "Password is required." }),
+    // username: z
+    //   .string({ required_error: "Username is required." })
+    //   .min(3, "Username must be at least 3 characters.")
+    //   .max(16, "Username must be no more than 16 characters.")
+    //   .regex(/^[0-9A-Za-z]+$/, "Username must be alphanumeric."),
+    // password: z
+    //   .string({ required_error: "Password is required." })
+    //   .min(1, { message: "Password is required." }),
     role: z.enum(["patient", "doctor", "admin"], {
       message: "Role is required.",
     }),
@@ -52,11 +54,11 @@ export const patientUpdateSchema = z
       .refine((date) => !isNaN(Date.parse(date)), {
         message: "Invalid date of birth string!",
       }),
-    username: z
-      .string({ required_error: "Username is required.." })
-      .min(3, "Username must be at least 3 characters.")
-      .max(16, "Username must be no more than 16 characters.")
-      .regex(/^[0-9A-Za-z]+$/, "Username must be alphanumeric."),
+    // username: z
+    //   .string({ required_error: "Username is required.." })
+    //   .min(3, "Username must be at least 3 characters.")
+    //   .max(16, "Username must be no more than 16 characters.")
+    //   .regex(/^[0-9A-Za-z]+$/, "Username must be alphanumeric."),
     role: z.enum(["patient", "doctor", "admin"], {
       message: "Role is required.",
     }),

@@ -294,9 +294,9 @@ export const fetchPaymentsByPatient = async (patientId, params) => {
   return data;
 };
 
-export const fetchAccounts = async (clinicId) => {
+export const fetchAccounts = async (clinicId, searchParamStr = "") => {
   return await http().get(
-    `${endpoints.treatments.payments}/accounts/${clinicId}`,
+    `${endpoints.treatments.payments}/accounts/${clinicId}?${searchParamStr}`,
   );
   return data;
 };

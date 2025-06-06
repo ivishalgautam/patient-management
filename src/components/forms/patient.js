@@ -55,6 +55,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
     ),
     defaultValues: { role: "patient" },
   });
+  console.log({ errors });
   const { clinic } = useContext(ClinicContext);
   const [render, setRender] = useState(false);
   const { data, isLoading, isError, error } = useQuery({
@@ -265,7 +266,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
             </div>
 
             {/* Username */}
-            <div>
+            {/* <div>
               <Label>Username</Label>
               <Input
                 {...register("username", { required: "required*" })}
@@ -275,10 +276,10 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
               {errors.username && (
                 <span className="text-red-500">{errors.username.message}</span>
               )}
-            </div>
+            </div> */}
 
             {/* Password */}
-            {type === "create" && (
+            {/* {type === "create" && (
               <div>
                 <Label>Password</Label>
                 <Input
@@ -294,7 +295,7 @@ export default function PatientCreateForm({ id, type, updateMutation }) {
                   </span>
                 )}
               </div>
-            )}
+            )} */}
 
             {/* email */}
             <div>
