@@ -55,7 +55,7 @@ export default function BookingsListing() {
     mutationFn: ({ id, data }) => updateBookingStatus(id, data),
     onSuccess: ({ data }) => {
       if (data.status === "completed") {
-        router.push(`/patients/${data.patient_id}/treatments`);
+        router.push(`/patients/${data.patient_id}/comprehensive-examination`);
       }
       toast.success("Updated.");
     },
