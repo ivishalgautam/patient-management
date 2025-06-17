@@ -10,29 +10,6 @@ import {
 import { rupee } from "@/lib/Intl";
 import Link from "next/link";
 
-// const data = [
-//   {
-//     payment_received_this_month: "4000",
-//     total_payment_received: "4000",
-//     payment_cost_this_month: "20000",
-//     total_cost: "20000",
-//     graph: [
-//       { month: "Apr 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Aug 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Dec 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Feb 2025", total_amount: 20000, received_amount: 2000 },
-//       { month: "Jan 2025", total_amount: 0, received_amount: 0 },
-//       { month: "Jul 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Jun 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Mar 2024", total_amount: 0, received_amount: 0 },
-//       { month: "May 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Nov 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Oct 2024", total_amount: 0, received_amount: 0 },
-//       { month: "Sep 2024", total_amount: 0, received_amount: 0 },
-//     ],
-//   },
-// ];
-
 const chartConfig = {
   total_amount: {
     label: "Total Amount",
@@ -54,32 +31,63 @@ export default function AccountReports({ data = [] }) {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Payment Received This Month
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {rupee.format(data[0].payment_received_this_month)}
-            </div>
-          </CardContent>
+        <Card className="hover:border-primary hover:bg-primary/10">
+          <Link href={"/clinic-patients?payment_status=today_revenue"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Today&apos;s Revenue
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].total_cost_today)}
+              </div>
+            </CardContent>
+          </Link>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Payment Cost This Month
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {rupee.format(data[0].payment_cost_this_month)}
-            </div>
-          </CardContent>
+        <Card className="hover:border-primary hover:bg-primary/10">
+          <Link href={"/clinic-patients?payment_status=today_collection"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Today&apos;s Collection
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].total_payment_received_today)}
+              </div>
+            </CardContent>
+          </Link>
         </Card>
-        <Card>
+        <Card className="hover:border-primary hover:bg-primary/10">
+          <Link href={"/clinic-patients?payment_status=month_collection"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Payment Received This Month
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].payment_received_this_month)}
+              </div>
+            </CardContent>
+          </Link>
+        </Card>
+        <Card className="hover:border-primary hover:bg-primary/10">
+          <Link href={"/clinic-patients?payment_status=month_revenue"}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Revenue This Month
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {rupee.format(data[0].payment_cost_this_month)}
+              </div>
+            </CardContent>
+          </Link>
+        </Card>
+        <Card className="hover:border-primary hover:bg-primary/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Payment Received
@@ -91,9 +99,9 @@ export default function AccountReports({ data = [] }) {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:border-primary hover:bg-primary/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cost</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -101,7 +109,7 @@ export default function AccountReports({ data = [] }) {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:border-primary hover:bg-primary/10">
           <Link href={"/clinic-patients?payment_status=pending"}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Balance</CardTitle>
@@ -113,32 +121,8 @@ export default function AccountReports({ data = [] }) {
             </CardContent>
           </Link>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Today&apos;s Revenue
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {rupee.format(data[0].total_cost_today)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Today&apos;s Collection
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {rupee.format(data[0].total_payment_received_today)}
-            </div>
-          </CardContent>
-        </Card>
       </div>
-      <Card>
+      <Card className="hover:border-primary hover:bg-primary/10">
         <CardHeader>
           <CardTitle>Account Overview</CardTitle>
         </CardHeader>

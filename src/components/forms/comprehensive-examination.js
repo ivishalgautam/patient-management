@@ -2,24 +2,22 @@
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "../ui/textarea";
-import { Checkbox } from "../ui/checkbox";
 import useMultiFileHandler from "@/hooks/use-multi-file-handler";
 import Image from "next/image";
 import config from "@/config";
 import { Trash } from "lucide-react";
 import { useEffect } from "react";
+import { paths, svgFill, svgStroke } from "@/data/dental-chart";
 import {
-  paths,
-  svgFill,
-  svgSelectedFill,
-  svgStroke,
-} from "@/data/dental-chart";
-import { comprehensiveExaminationSchema } from "@/validation-schemas/comprehensive-examination";
-// import { ExaminationContext } from "@/store/examination-context";
-
+  comprehensiveExaminationEditSchema,
+  comprehensiveExaminationSchema,
+} from "@/validation-schemas/comprehensive-examination";
+import ReactSelect from "react-select";
+import { diseases } from "@/data";
+import DiseaseBadgeGrid from "../disease-badge-card";
 export default function ComprehensiveExaminationForm({
   type = "create",
   patientId,
@@ -36,7 +34,11 @@ export default function ComprehensiveExaminationForm({
     setValue,
     setError,
   } = useForm({
-    resolver: zodResolver(comprehensiveExaminationSchema),
+    resolver: zodResolver(
+      type === "create"
+        ? comprehensiveExaminationSchema
+        : comprehensiveExaminationEditSchema,
+    ),
     defaultValues: {
       patient_id: patientId,
       chief_complaint: "",
@@ -66,20 +68,13 @@ export default function ComprehensiveExaminationForm({
   const handleSelectTeeth = (id) => {
     if (!id) return toast.warning("Please select a teeth.");
 
-    const toothsToSet = affectedTooth.includes(id)
-      ? affectedTooth.filter((item) => item !== id)
-      : [...affectedTooth, id];
+    const toothsToSet = affectedTooth.some((tooth) => tooth.id === id)
+      ? affectedTooth.filter((item) => item.id !== id)
+      : [...affectedTooth, { tooth: id, color: "" }];
 
     setValue("affected_tooths", toothsToSet);
   };
   const onSubmit = (data) => {
-    // if (!images.length) {
-    //   return setError("gallery", {
-    //     type: "custom",
-    //     message: "Please select gallery",
-    //   });
-    // }
-
     const payload = {
       ...data,
       gallery: images,
@@ -109,33 +104,67 @@ export default function ComprehensiveExaminationForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
       {/* Affected tooth */}
-      <div className="mx-auto w-56">
-        <svg
-          id="svg68"
-          version="1.1"
-          viewBox="0 0 450 750"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {paths.map((item) => {
-            const isSelected = affectedTooth.includes(item.id);
-            return (
-              <path
-                key={item.id}
-                {...item.path}
-                strokeWidth="3"
-                stroke={svgStroke}
-                fill={isSelected ? svgSelectedFill : svgFill}
-                onClick={() => handleSelectTeeth(item.id)}
-                className="relative h-full w-full cursor-pointer transition-colors"
+      <div className="grid grid-cols-3">
+        <div className="flex flex-wrap gap-2">
+          {affectedTooth.map((tooth, ind) => (
+            <div key={ind}>
+              <Label className="text-sm">Tooth No. {tooth.tooth}</Label>
+              <Controller
+                control={control}
+                name={`affected_tooths.${ind}.color`}
+                render={({ field }) => (
+                  <ReactSelect
+                    options={diseases}
+                    onChange={({ value, label }) => field.onChange(value)}
+                    value={diseases.find((ele) => ele.value === field.value)}
+                    isDisabled={type === "view"}
+                  />
+                )}
               />
-            );
-          })}
-        </svg>
-        {errors.affected_tooths && (
-          <span className="text-sm text-red-500">
-            {errors.affected_tooths.message}
-          </span>
-        )}
+              {errors?.affected_tooths?.[ind]?.color && (
+                <span className="text-sm text-red-500">
+                  {errors?.affected_tooths?.[ind]?.color?.message}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="mx-auto w-56">
+          <svg
+            id="svg68"
+            version="1.1"
+            viewBox="0 0 450 750"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {paths.map((item) => {
+              const currTooth = affectedTooth.find(
+                (tooth) => tooth.tooth == item.id,
+              );
+              const isSelected = !!currTooth;
+              return (
+                <path
+                  key={item.id}
+                  {...item.path}
+                  strokeWidth="3"
+                  stroke={svgStroke}
+                  fill={isSelected ? currTooth.color : svgFill}
+                  onClick={() =>
+                    type === "view" ? null : handleSelectTeeth(item.id)
+                  }
+                  className="relative h-full w-full cursor-pointer transition-colors"
+                />
+              );
+            })}
+          </svg>
+          {errors.affected_tooths && (
+            <span className="text-sm text-red-500">
+              {errors.affected_tooths.message}
+            </span>
+          )}
+        </div>
+        <div>
+          <DiseaseBadgeGrid />
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

@@ -12,7 +12,16 @@ export const treatmentPlanSchema = z.object({
     }),
   ),
   affected_tooths: z
-    .array(z.string({ required_error: "Affected tooth is required." }))
+    .array(
+      z.object({
+        tooth: z.coerce
+          .string({ required_error: "required*" })
+          .min(1, { message: "required*" }),
+        color: z
+          .string({ required_error: "required*" })
+          .min(1, { message: "required*" }),
+      }),
+    )
     .min(1, { message: "Affected tooth is required." }),
   radiographic_diagnosis: z.array(
     z.string({ required_error: "Radiographic Diagnosis is required." }),
@@ -30,6 +39,15 @@ export const treatmentPlanEditSchema = z.object({
     )
     .min(1, { message: "Atleast 1 note is required." }),
   affected_tooths: z
-    .array(z.string({ required_error: "Affected tooth is required." }))
+    .array(
+      z.object({
+        tooth: z.coerce
+          .string({ required_error: "required*" })
+          .min(1, { message: "required*" }),
+        color: z
+          .string({ required_error: "required*" })
+          .min(1, { message: "required*" }),
+      }),
+    )
     .min(1, { message: "Affected tooth is required." }),
 });

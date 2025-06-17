@@ -36,3 +36,22 @@ export const patientDetailTabs = [
     url: "documents",
   },
 ];
+
+export const diseases = [
+  {
+    value: "#0000FF",
+    label: "Mobile",
+  },
+  {
+    value: "#000000",
+    label: "Carious",
+  },
+  {
+    value: "#FF0000",
+    label: "Pain",
+  },
+  {
+    value: "#FFFF00",
+    label: "Missing",
+  },
+];

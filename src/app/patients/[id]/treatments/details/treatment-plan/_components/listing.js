@@ -134,14 +134,17 @@ export default function Listing({ patientId }) {
                 className="h-52"
               >
                 {paths.map((item) => {
-                  const isSelected = plan.affected_tooths.includes(item.id);
+                  const currTooth = plan.affected_tooths.find(
+                    (tooth) => tooth.tooth == item.id,
+                  );
+                  const isSelected = !!currTooth;
                   return (
                     <path
                       key={item.id}
                       {...item.path}
                       strokeWidth="3"
                       stroke={svgStroke}
-                      fill={isSelected ? svgSelectedFill : svgFill}
+                      fill={isSelected ? currTooth.color : svgFill}
                       className="relative h-full w-full cursor-pointer transition-colors"
                     />
                   );

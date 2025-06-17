@@ -1,11 +1,4 @@
-import {
-  AlertCircle,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Info,
-  User,
-} from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle2, Clock, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,19 +10,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import moment from "moment";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { H6, Small } from "@/components/ui/typography";
+import { Small } from "@/components/ui/typography";
 
 export default function TreatmentCard({ treatment, handleStatusChange }) {
   return (
     <Card key={treatment.id} className="h-full w-full">
       <CardHeader className="pb-2">
-        <CardTitle className="text-primary text-xl font-semibold">
+        <CardTitle className="text-primary text-xl font-semibold capitalize">
           {treatment.service_name}
         </CardTitle>
       </CardHeader>

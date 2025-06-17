@@ -115,7 +115,7 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="gap-4 md:grid md:grid-cols-2">
         {/* patients */}
-        <div>
+        <div className="col-span-full">
           <Label>Patient</Label>
           <Controller
             control={control}
@@ -137,7 +137,6 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
             <span className="text-red-500">{errors.patient.message}</span>
           )}
         </div>
-        <div></div>
 
         {/* services */}
         {/* <div>

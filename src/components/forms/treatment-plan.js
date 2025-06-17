@@ -36,6 +36,9 @@ import { useSearchParams } from "next/navigation";
 import { DentalNotesTimeline } from "../dental-notes-timeline";
 import { Badge } from "../ui/badge";
 import moment from "moment";
+import ReactSelect from "react-select";
+import { diseases } from "@/data";
+import DiseaseBadgeGrid from "../disease-badge-card";
 
 export default function TreatmentPlanForm({
   type = "create",
@@ -60,7 +63,6 @@ export default function TreatmentPlanForm({
       notes: [],
     },
   });
-  const treatmentId = searchParams.get("tid");
   const {
     register,
     handleSubmit,
@@ -69,6 +71,8 @@ export default function TreatmentPlanForm({
     watch,
     control,
   } = form;
+
+  const treatmentId = searchParams.get("tid");
 
   const { fields, append, remove } = useFieldArray({ control, name: "notes" });
 
@@ -98,13 +102,12 @@ export default function TreatmentPlanForm({
   const handleSelectTeeth = (id) => {
     if (!id) return toast.warning("Please select a teeth.");
 
-    const toothsToSet = affectedTooth.includes(id)
-      ? affectedTooth.filter((item) => item !== id)
-      : [...affectedTooth, id];
+    const toothsToSet = affectedTooth.some((tooth) => tooth.id === id)
+      ? affectedTooth.filter((item) => item.id !== id)
+      : [...affectedTooth, { tooth: id, color: "" }];
 
     setValue("affected_tooths", toothsToSet);
   };
-
   const onSubmit = async (data) => {
     const payload = {
       patient_id: patientId,
@@ -133,8 +136,8 @@ export default function TreatmentPlanForm({
       rerender(true);
     }
   }, [treatmentPlan, setValue]);
-
   if (isError) return error?.message ?? "Error";
+
   return (
     <FormProvider {...form}>
       {type === "edit" && isLoading ? (
@@ -145,40 +148,79 @@ export default function TreatmentPlanForm({
             <div>
               <div className="grid w-full grid-cols-12 space-y-2">
                 {/* Affected tooth */}
-                <div className="col-span-4 mx-auto w-56">
-                  <svg
-                    id="svg68"
-                    version="1.1"
-                    viewBox="0 0 450 750"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {paths.map((item) => {
-                      const isSelected = affectedTooth.includes(item.id);
-                      return (
-                        <path
-                          key={item.id}
-                          {...item.path}
-                          strokeWidth="3"
-                          stroke={svgStroke}
-                          fill={isSelected ? svgSelectedFill : svgFill}
-                          onClick={() =>
-                            type === "view" ? null : handleSelectTeeth(item.id)
-                          }
-                          className="relative h-full w-full cursor-pointer transition-colors"
-                        />
-                      );
-                    })}
-                  </svg>
-                  {errors.affected_tooths && (
-                    <span className="text-sm text-red-500">
-                      {errors.affected_tooths.message}
-                    </span>
-                  )}
+                <div className="col-span-4 mx-auto space-y-4">
+                  <DiseaseBadgeGrid />
+                  <div className="mx-auto w-56">
+                    <svg
+                      id="svg68"
+                      version="1.1"
+                      viewBox="0 0 450 750"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {paths.map((item) => {
+                        const currTooth = affectedTooth.find(
+                          (tooth) => tooth.tooth == item.id,
+                        );
+                        const isSelected = !!currTooth;
+                        return (
+                          <path
+                            key={item.id}
+                            {...item.path}
+                            strokeWidth="3"
+                            stroke={svgStroke}
+                            fill={isSelected ? currTooth.color : svgFill}
+                            onClick={() =>
+                              type === "view"
+                                ? null
+                                : handleSelectTeeth(item.id)
+                            }
+                            className="relative h-full w-full cursor-pointer transition-colors"
+                          />
+                        );
+                      })}
+                    </svg>
+                    {errors.affected_tooths && (
+                      <span className="text-sm text-red-500">
+                        {errors.affected_tooths.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-span-8 space-y-4 !overflow-y-hidden rounded-lg border bg-gray-50 p-2">
                   <ScrollArea className="h-[425px] p-4">
                     <div className="space-y-2">
+                      <div className="flex flex-wrap gap-2">
+                        {affectedTooth.map((tooth, ind) => (
+                          <div key={ind}>
+                            <Label className="text-sm">
+                              Tooth No. {tooth.tooth}
+                            </Label>
+                            <Controller
+                              control={control}
+                              name={`affected_tooths.${ind}.color`}
+                              render={({ field }) => (
+                                <ReactSelect
+                                  options={diseases}
+                                  onChange={({ value, label }) =>
+                                    field.onChange(value)
+                                  }
+                                  value={diseases.find(
+                                    (ele) => ele.value === field.value,
+                                  )}
+                                  isDisabled={type === "view"}
+                                />
+                              )}
+                            />
+                            {errors?.affected_tooths?.[ind]?.color && (
+                              <span className="text-sm text-red-500">
+                                {errors?.affected_tooths?.[ind]?.color?.message}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
                       {/* Radiographic diagnosis */}
                       {type === "create" && (
                         <div>
