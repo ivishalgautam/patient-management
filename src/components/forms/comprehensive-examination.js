@@ -68,8 +68,8 @@ export default function ComprehensiveExaminationForm({
   const handleSelectTeeth = (id) => {
     if (!id) return toast.warning("Please select a teeth.");
 
-    const toothsToSet = affectedTooth.some((tooth) => tooth.id === id)
-      ? affectedTooth.filter((item) => item.id !== id)
+    const toothsToSet = affectedTooth.some((tooth) => tooth.tooth === id)
+      ? affectedTooth.filter((item) => item.tooth !== id)
       : [...affectedTooth, { tooth: id, color: "" }];
 
     setValue("affected_tooths", toothsToSet);
@@ -147,7 +147,13 @@ export default function ComprehensiveExaminationForm({
                   {...item.path}
                   strokeWidth="3"
                   stroke={svgStroke}
-                  fill={isSelected ? currTooth.color : svgFill}
+                  fill={
+                    isSelected
+                      ? currTooth.color
+                        ? currTooth.color
+                        : "#888"
+                      : svgFill
+                  }
                   onClick={() =>
                     type === "view" ? null : handleSelectTeeth(item.id)
                   }

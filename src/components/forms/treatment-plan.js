@@ -101,8 +101,7 @@ export default function TreatmentPlanForm({
   const selectedDiagnosis = watch("radiographic_diagnosis");
   const handleSelectTeeth = (id) => {
     if (!id) return toast.warning("Please select a teeth.");
-
-    const toothsToSet = affectedTooth.some((tooth) => tooth.id === id)
+    const toothsToSet = affectedTooth.some((tooth) => tooth.tooth === id)
       ? affectedTooth.filter((item) => item.id !== id)
       : [...affectedTooth, { tooth: id, color: "" }];
 
@@ -168,7 +167,13 @@ export default function TreatmentPlanForm({
                             {...item.path}
                             strokeWidth="3"
                             stroke={svgStroke}
-                            fill={isSelected ? currTooth.color : svgFill}
+                            fill={
+                              isSelected
+                                ? currTooth.color
+                                  ? currTooth.color
+                                  : "#888"
+                                : svgFill
+                            }
                             onClick={() =>
                               type === "view"
                                 ? null
@@ -226,37 +231,41 @@ export default function TreatmentPlanForm({
                         <div>
                           <Label>Radiographic diagnosis</Label>
                           <div className="flex items-center justify-start gap-4">
-                            {["OPG", "CBCT", "5D Scan"].map((item, id) => (
-                              <div
-                                key={id}
-                                className="border-input has-[[data-state=checked]]:border-primary relative flex cursor-pointer items-center gap-2 rounded-lg border bg-white p-2 px-3 shadow-sm shadow-black/5"
-                              >
-                                <div className="flex justify-between gap-2">
-                                  <Checkbox
-                                    id={`${id}-${item}`}
-                                    value={item}
-                                    className="order-1 after:absolute after:inset-0"
-                                    onCheckedChange={(checked) => {
-                                      if (checked) {
-                                        setValue("radiographic_diagnosis", [
-                                          ...selectedDiagnosis,
-                                          item,
-                                        ]);
-                                      } else {
-                                        setValue(
-                                          "radiographic_diagnosis",
-                                          selectedDiagnosis.filter(
-                                            (ele) => ele !== item,
-                                          ),
-                                        );
-                                      }
-                                    }}
-                                    checked={selectedDiagnosis.includes(item)}
-                                  />
+                            {["OPG", "CBCT", "3D Scan", "IOTA"].map(
+                              (item, id) => (
+                                <div
+                                  key={id}
+                                  className="border-input has-[[data-state=checked]]:border-primary relative flex cursor-pointer items-center gap-2 rounded-lg border bg-white p-2 px-3 shadow-sm shadow-black/5"
+                                >
+                                  <div className="flex justify-between gap-2">
+                                    <Checkbox
+                                      id={`${id}-${item}`}
+                                      value={item}
+                                      className="order-1 after:absolute after:inset-0"
+                                      onCheckedChange={(checked) => {
+                                        if (checked) {
+                                          setValue("radiographic_diagnosis", [
+                                            ...selectedDiagnosis,
+                                            item,
+                                          ]);
+                                        } else {
+                                          setValue(
+                                            "radiographic_diagnosis",
+                                            selectedDiagnosis.filter(
+                                              (ele) => ele !== item,
+                                            ),
+                                          );
+                                        }
+                                      }}
+                                      checked={selectedDiagnosis.includes(item)}
+                                    />
+                                  </div>
+                                  <Label htmlFor={`${id}-${item}`}>
+                                    {item}
+                                  </Label>
                                 </div>
-                                <Label htmlFor={`${id}-${item}`}>{item}</Label>
-                              </div>
-                            ))}
+                              ),
+                            )}
                           </div>
                           {errors.radiographic_diagnosis && (
                             <span className="text-sm text-red-500">
