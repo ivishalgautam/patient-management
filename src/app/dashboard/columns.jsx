@@ -88,6 +88,7 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
     cell: ({ row }) => {
       const id = row.original.id;
       const user_id = row.original.user_id;
+      const patientId = row.original.patient_id;
       const username = row.getValue("username");
       return (
         <DropdownMenu>
@@ -101,7 +102,7 @@ export const columns = (handleUserStatus, setUserId, openModal) => [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/treatments?page=1&limit=10&username=${username}`}>
+              <Link href={`/patients/${patientId}/treatments?page=1&limit=10`}>
                 Treatments
               </Link>
             </DropdownMenuItem>
