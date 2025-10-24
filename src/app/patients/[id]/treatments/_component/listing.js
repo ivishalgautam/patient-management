@@ -15,7 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ClinicContext } from "@/store/clinic-context";
 import {
   fetchTreatmentsByPatientAndClinicId,
@@ -27,7 +27,8 @@ import { useTableFilters } from "./use-table-filters";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 import { CreateDialog } from "./create-dialog";
-import { PlusIcon } from "lucide-react";
+import { Eye, PlusIcon } from "lucide-react";
+import { ExaminationContext } from "@/store/examination-context";
 
 export default function Listing({ patientId }) {
   const [isModal, setIsModal] = useState(false);
@@ -53,6 +54,12 @@ export default function Listing({ patientId }) {
     ],
     enabled: !!searchParamsStr && !!clinic?.id && !!patientId,
   });
+  const {
+    examination,
+    isLoading: isExaminationLoading,
+    isFetching: isExaminationFetching,
+  } = useContext(ExaminationContext);
+
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { setPage } = useTableFilters();
@@ -88,7 +95,29 @@ export default function Listing({ patientId }) {
 
   return (
     <div className="border-input w-full space-y-4 rounded-lg">
-      <div className="text-end">
+      <div className="flex items-center justify-end gap-2">
+        <Link className={buttonVariants({})} href={`/patients/${patientId}`}>
+          <Eye />
+          View Profile
+        </Link>
+
+        <Link
+          className={buttonVariants({ variant: "outline" })}
+          href={`/patients/${patientId}/comprehensive-examination`}
+        >
+          {examination?.id ? (
+            <>
+              <Eye />
+              View Comprehensive examination
+            </>
+          ) : (
+            <>
+              <PlusIcon />
+              Add Comprehensive examination
+            </>
+          )}
+        </Link>
+
         <Button
           variant="outline"
           type="button"

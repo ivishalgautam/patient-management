@@ -61,6 +61,7 @@ export default function TreatmentPlanForm({
       affected_tooths: [],
       radiographic_diagnosis: [],
       notes: [],
+      total_cost: 0,
     },
   });
   const {
@@ -108,6 +109,7 @@ export default function TreatmentPlanForm({
     setValue("affected_tooths", toothsToSet);
   };
   const onSubmit = async (data) => {
+    console.log({ data });
     const payload = {
       patient_id: patientId,
       treatment_id: treatmentId,
@@ -231,7 +233,7 @@ export default function TreatmentPlanForm({
                         <div>
                           <Label>Radiographic diagnosis</Label>
                           <div className="flex items-center justify-start gap-4">
-                            {["OPG", "CBCT", "3D Scan", "IOTA"].map(
+                            {["OPG", "CBCT", "3D Scan", "IOPA"].map(
                               (item, id) => (
                                 <div
                                   key={id}
@@ -276,21 +278,19 @@ export default function TreatmentPlanForm({
                       )}
 
                       {/* total cost */}
-                      {type === "create" && (
-                        <div>
-                          <Label>Total cost</Label>
-                          <Input
-                            type="number"
-                            {...register("total_cost", { valueAsNumber: true })}
-                            placeholder="Enter total cost"
-                          />
-                          {errors.total_cost && (
-                            <span className="text-sm text-red-500">
-                              {errors.total_cost.message}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                      <div>
+                        <Label>Total cost</Label>
+                        <Input
+                          type="number"
+                          {...register("total_cost", { valueAsNumber: true })}
+                          placeholder="Enter total cost"
+                        />
+                        {errors.total_cost && (
+                          <span className="text-sm text-red-500">
+                            {errors.total_cost.message}
+                          </span>
+                        )}
+                      </div>
 
                       {/* notes */}
                       {type === "view" ? (

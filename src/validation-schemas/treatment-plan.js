@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 export const treatmentPlanSchema = z.object({
-  total_cost: z
-    .number({ required_error: "Total cost is required." })
-    .min(1, { message: "Total cost is required." }),
+  total_cost: z.number().optional().default(0),
   notes: z.array(
     z.object({
       note: z.string({ required_error: "Note is required." }).min(1, {
@@ -29,6 +27,7 @@ export const treatmentPlanSchema = z.object({
 });
 
 export const treatmentPlanEditSchema = z.object({
+  total_cost: z.number().optional().default(0),
   notes: z
     .array(
       z.object({
