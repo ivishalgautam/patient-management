@@ -39,6 +39,7 @@ import moment from "moment";
 import ReactSelect from "react-select";
 import { diseases } from "@/data";
 import DiseaseBadgeGrid from "../disease-badge-card";
+import { cn } from "@/lib/utils";
 
 export default function TreatmentPlanForm({
   type = "create",
@@ -101,6 +102,7 @@ export default function TreatmentPlanForm({
   const affectedTooth = watch("affected_tooths");
   const selectedDiagnosis = watch("radiographic_diagnosis");
   const handleSelectTeeth = (id) => {
+    console.log({ id });
     if (!id) return toast.warning("Please select a teeth.");
     const toothsToSet = affectedTooth.some((tooth) => tooth.tooth === id)
       ? affectedTooth.filter((item) => item.id !== id)
@@ -181,7 +183,10 @@ export default function TreatmentPlanForm({
                                 ? null
                                 : handleSelectTeeth(item.id)
                             }
-                            className="relative h-full w-full cursor-pointer transition-colors"
+                            className={cn(
+                              "relative h-full w-full cursor-pointer transition-colors",
+                              item.id,
+                            )}
                           />
                         );
                       })}
