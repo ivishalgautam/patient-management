@@ -102,7 +102,6 @@ export default function TreatmentPlanForm({
   const affectedTooth = watch("affected_tooths");
   const selectedDiagnosis = watch("radiographic_diagnosis");
   const handleSelectTeeth = (id) => {
-    console.log({ id });
     if (!id) return toast.warning("Please select a teeth.");
     const toothsToSet = affectedTooth.some((tooth) => tooth.tooth === id)
       ? affectedTooth.filter((item) => item.id !== id)

@@ -22,6 +22,7 @@ export default function ClinicForm({ type = "create", id, updateMutation }) {
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: zodResolver(clinicSchema),
   });
@@ -39,24 +40,23 @@ export default function ClinicForm({ type = "create", id, updateMutation }) {
   });
 
   const onSubmit = async (data) => {
-    const payload = {
-      name: data.name,
-      address: data.address,
-    };
+    // const payload = {
+    //   name: data.name,
+    //   address: data.address,
+    // };
     if (type === "edit") {
-      updateMutation.mutate(payload);
+      updateMutation.mutate(data);
     }
     if (type === "create") {
-      createMutation.mutate(payload);
+      createMutation.mutate(data);
     }
   };
 
   useEffect(() => {
     if (data) {
-      setValue("name", data.name);
-      setValue("address", data.address);
+      reset(data);
     }
-  }, [data, setValue]);
+  }, [data, reset]);
 
   if (type === "edit" && isLoading) return <Spinner />;
   if (type === "edit" && isError) return error?.message ?? "error";
@@ -84,6 +84,16 @@ export default function ClinicForm({ type = "create", id, updateMutation }) {
             {errors.address && (
               <span className="text-red-500">{errors.address.message}</span>
             )}
+          </div>
+
+          {/* max_patients_per_slot */}
+          <div>
+            <Label>Max patients per slot</Label>
+            <Input
+              type="number"
+              {...register("max_patients_per_slot", { valueAsNumber: true })}
+              placeholder="Enter max patients per slot"
+            />
           </div>
         </div>
         <Button className="" disabled={createMutation.isLoading}>

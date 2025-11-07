@@ -26,7 +26,7 @@ export default function BookSlotPage() {
     mutationFn: (data) => createBookSlot({ ...data, clinic_id: clinic.id }),
     onSuccess: (data) => {
       toast.success(data?.message ?? "Created");
-      router.replace("/appointments");
+      router.replace("/appointments?page=1&limit=10");
     },
     onError: (error) => {
       toast.error(error?.message ?? "Error");
