@@ -9,9 +9,7 @@ export const patientSchema = z
     mobile_number: z
       .string({ required_error: "Mobile number is required." })
       .min(1, { message: "Mobile number is required." }),
-    email: z
-      .string({ required_error: "Email is required." })
-      .email("Invalid email format."),
+    email: z.string().email().optional().or(z.literal("")),
     gender: z.string().optional(),
     dob: z.string().optional(),
     // username: z
@@ -45,9 +43,7 @@ export const patientUpdateSchema = z
     mobile_number: z
       .string({ required_error: "Mobile number is required." })
       .min(1, { message: "Mobile number is required." }),
-    email: z
-      .string({ required_error: "Email is required." })
-      .email("Invalid email format."),
+    email: z.string().email().optional().or(z.literal("")),
     gender: z.enum(["male", "female", "other"], "Gender is required."),
     dob: z
       .string({ required_error: "Date of birth is required." })
