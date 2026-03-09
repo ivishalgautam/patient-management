@@ -1,21 +1,23 @@
 "use client";
 import { columns } from "../columns";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { DataTable } from "@/components/ui/table/data-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DataTableSkeleton } from "@/components/ui/table/data-table-skeleton";
-import {
-  deletePayment,
-  fetchPayments,
-  updatePayment,
-} from "@/server/treatment";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CreateDialog } from "./create-dialog";
 import { UpdateDialog } from "./update-dialog";
 import { DeleteDialog } from "./delete-dialog";
+import {
+  createLedger,
+  deleteLedger,
+  fetchLedgerByClinicAndPatient,
+  getLedgers,
+} from "@/server/ledger";
+import { ClinicContext } from "@/store/clinic-context";
 
 export default function Listing({ patientId }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -26,16 +28,21 @@ export default function Listing({ patientId }) {
   const searchParams = useSearchParams();
   const searchParamStr = searchParams.toString();
   const router = useRouter();
-  const treatmentId = searchParams.get("tid");
+  const { clinic } = useContext(ClinicContext);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: [`payments-${treatmentId}`, searchParamStr],
-    queryFn: () => fetchPayments(treatmentId, searchParamStr),
-    enabled: !!treatmentId,
+    queryKey: [`ledger`, clinic.id, patientId, searchParams],
+    queryFn: () =>
+      getLedgers(
+        `clinic_id=${clinic.id}&patient_id=${patientId}&${searchParamStr}`,
+      ),
+    enabled: !!patientId && clinic && !!clinic.id,
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (data) => updatePayment(id, data),
+  console.log({ data });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => createLedger(id, data),
     onSuccess: (data) => toast.success("Update"),
     onError: (error) =>
       toast.error(
@@ -43,17 +50,17 @@ export default function Listing({ patientId }) {
       ),
     onSettled: () => {
       setIsUpdateOpen(false);
-      queryClient.invalidateQueries([`payments-${treatmentId}`]);
+      queryClient.invalidateQueries([`ledger`]);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ id }) => deletePayment(id),
+    mutationFn: ({ id }) => deleteLedger(id),
     onSuccess: (data) => toast.success("Deleted"),
     onError: (error) => toast.error(error?.message || "Error deleting."),
     onSettled: () => {
       setIsDeleteOpen(false);
-      queryClient.invalidateQueries([`payments-${treatmentId}`]);
+      queryClient.invalidateQueries([`ledger`]);
     },
   });
 
@@ -81,7 +88,7 @@ export default function Listing({ patientId }) {
           variant="outline"
           onClick={() => setIsCreateOpen(true)}
         >
-          <Plus /> Create payment
+          <Plus /> Create ledger
         </Button>
       </div>
       <DataTable
@@ -90,8 +97,8 @@ export default function Listing({ patientId }) {
           () => setIsUpdateOpen(true),
           setId,
         )}
-        data={data.payments}
-        totalItems={data.total}
+        data={data?.ledger ?? []}
+        totalItems={data?.total ?? 0}
       />
       <DeleteDialog
         {...{
@@ -105,7 +112,6 @@ export default function Listing({ patientId }) {
         {...{
           isOpen: isCreateOpen,
           setIsOpen: setIsCreateOpen,
-          treatmentId,
           patientId,
         }}
       />
@@ -113,9 +119,9 @@ export default function Listing({ patientId }) {
         {...{
           isOpen: isUpdateOpen,
           setIsOpen: setIsUpdateOpen,
-          treatmentId,
+          patientId,
           id,
-          updateMutation,
+          createMutation,
         }}
       />
     </div>

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Large, Muted } from "@/components/ui/typography";
 import { rupee } from "@/lib/Intl";
 import { cn } from "@/lib/utils";
+import { fetchLedgerByClinicAndPatient } from "@/server/ledger";
 import {
   fetchPatient,
   getPatientDetailsByPatientAndClinicId,
@@ -26,30 +27,42 @@ const tabs = [
     desc: "Check comprehensive examination here",
     icon: "/images/icons/examination.png",
     url: "comprehensive-examination",
+    is_examination_required: false,
   },
   {
     title: "Treatments",
     desc: "Check treatments here",
     icon: "/images/icons/treatment-plan.png",
     url: "treatments",
+    is_examination_required: true,
   },
   {
     title: "Payments",
     desc: "Check payments here",
     icon: "/images/icons/dental-payment.png",
     url: "payment",
+    is_examination_required: true,
   },
   {
     title: "Doctor Notes",
     desc: "Notes for doctor",
     icon: "/images/icons/note.png",
     url: "notes",
+    is_examination_required: true,
   },
   {
     title: "Documents",
     desc: "Check documents here",
     icon: "/images/icons/document.png",
     url: "documents",
+    is_examination_required: true,
+  },
+  {
+    title: "Ledger",
+    desc: "Check patient ledger here",
+    icon: "/images/icons/ledger.png",
+    url: "ledgers",
+    is_examination_required: false,
   },
 ];
 
@@ -67,6 +80,17 @@ export default function PatientDetailsPage({ params: { id } }) {
     isLoading: isExaminationLoading,
     isFetching: isExaminationFetching,
   } = useContext(ExaminationContext);
+  const {
+    data: ledger,
+    isLoading: isLedgerLoading,
+    isError: isLedgerError,
+    error: lederError,
+  } = useQuery({
+    queryKey: [`ledger`],
+    queryFn: () => fetchLedgerByClinicAndPatient(clinic.id, id),
+    enabled: !!id && !!clinic?.id,
+  });
+
   if (isError) return error?.message ?? "error";
 
   return (
@@ -75,7 +99,7 @@ export default function PatientDetailsPage({ params: { id } }) {
       {isLoading ? (
         <Skeleton className={"h-[125.6px] w-1/2"} />
       ) : (
-        <div className="flex w-max items-center justify-start gap-4 rounded-lg border p-3">
+        <div className="relative flex w-max items-center justify-start gap-4 rounded-lg border p-3">
           <div>
             <ImageWithFallback
               src={data?.avatar}
@@ -112,37 +136,29 @@ export default function PatientDetailsPage({ params: { id } }) {
                 <Badge>{rupee.format(data?.balance ?? 0)}</Badge>
               </div>
             </div>
+
+            <div className="bg-primary/30 border-primary relative flex w-max gap-4 rounded-lg border p-3">
+              <div className="capitalize">
+                <Muted className={"text-black"}>Credit balance</Muted>
+                <Badge>{rupee.format(ledger ?? 0)}</Badge>
+              </div>
+            </div>
           </div>
         </div>
       )}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
-        <Link href={`${pathname}/${tabs[0].url}`}>
-          <div className="flex cursor-pointer items-center justify-start gap-3 rounded-lg border p-3 shadow-xs">
-            <figure className="size-16 grow-0">
-              <Image
-                src={tabs[0].icon}
-                width={100}
-                height={100}
-                alt={tabs[0].title}
-                className="h-full w-full object-cover object-center"
-              />
-            </figure>
-            <div>
-              <Large>{tabs[0].title}</Large>
-              <Muted>{tabs[0].desc}</Muted>
-            </div>
-          </div>
-        </Link>
         {(isExaminationLoading || isExaminationFetching) &&
           Array.from({ length: tabs.length - 1 }).map((_, ind) => (
             <Skeleton className={"h-[89.6px] w-full"} key={ind} />
           ))}
         {!(isExaminationLoading || isExaminationFetching) &&
-          tabs
-            .slice(1, tabs.length)
-            .map((item, ind) => (
-              <Tab key={ind} item={item} disabled={!examination} />
-            ))}
+          tabs.map((item, ind) => (
+            <Tab
+              key={ind}
+              item={item}
+              disabled={item.is_examination_required && !examination}
+            />
+          ))}
       </div>
     </PageContainer>
   );

@@ -43,6 +43,14 @@ export const columns = (openDeleteDialog, openUpdateDialog, setId) => [
     },
   },
   {
+    accessorKey: "advance_used",
+    header: "Advance used",
+    cell: (row) => {
+      const amnt = row.getValue("advance_used");
+      return rupee.format(amnt);
+    },
+  },
+  {
     accessorKey: "remarks",
     header: "REMARKS",
   },

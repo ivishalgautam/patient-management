@@ -8,19 +8,27 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export function CreateDialog({ isOpen, setIsOpen, patientId, treatmentId }) {
+export function UpdateDialog({
+  isOpen,
+  setIsOpen,
+  treatmentId,
+  id,
+  updateMutation,
+}) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create payment.</DialogTitle>
-            <DialogDescription>You can create a payment.</DialogDescription>
+            <DialogTitle>Update payment.</DialogTitle>
+            <DialogDescription>Update payment.</DialogDescription>
           </DialogHeader>
           <PaymentForm
-            patientId={patientId}
             treatmentId={treatmentId}
             closeDialog={setIsOpen}
+            id={id}
+            type="edit"
+            updateMutation={updateMutation}
           />
         </DialogContent>
       </Dialog>

@@ -10,13 +10,6 @@ import { toast } from "sonner";
 import Spinner from "../Spinner";
 import { useContext, useMemo } from "react";
 import { createTreatment } from "@/server/treatment";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import useFetchServices from "@/hooks/use-fetch-services";
 import { treatmentSchema } from "@/validation-schemas/treatment";
 import { ClinicContext } from "@/store/clinic-context";

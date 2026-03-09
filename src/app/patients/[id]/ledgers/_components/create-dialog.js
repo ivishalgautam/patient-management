@@ -1,5 +1,4 @@
-import InvestigationForm from "@/components/forms/investigation";
-import PaymentForm from "@/components/forms/payment";
+import LedgerForm from "@/components/forms/ledger";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export function CreateDialog({ isOpen, setIsOpen, patientId, treatmentId }) {
+export function CreateDialog({ isOpen, setIsOpen, patientId }) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -17,11 +16,7 @@ export function CreateDialog({ isOpen, setIsOpen, patientId, treatmentId }) {
             <DialogTitle>Create payment.</DialogTitle>
             <DialogDescription>You can create a payment.</DialogDescription>
           </DialogHeader>
-          <PaymentForm
-            patientId={patientId}
-            treatmentId={treatmentId}
-            closeDialog={setIsOpen}
-          />
+          <LedgerForm patientId={patientId} closeDialog={setIsOpen} />
         </DialogContent>
       </Dialog>
     </>

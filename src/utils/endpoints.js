@@ -35,6 +35,9 @@ export const endpoints = {
   dentalChart: {
     getAll: "dental-charts",
   },
+  ledgers: {
+    getAll: "ledgers",
+  },
   reports: { getAll: "/reports" },
   procedures: {
     getAll: "/procedures",
