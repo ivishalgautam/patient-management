@@ -117,7 +117,11 @@ export default function TreatmentVisitForm({
               control={control}
               name="treatment_id"
               render={({ field: { onChange, value } }) => (
-                <Select onValueChange={onChange} value={value}>
+                <Select
+                  onValueChange={onChange}
+                  value={value}
+                  disabled={treatmentId}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Treatment" />
                   </SelectTrigger>

@@ -21,7 +21,8 @@ import VisitNotes from "./treatments/details/visits/_components/visit-notes";
 import Spinner from "@/components/Spinner";
 import { CreateDialog } from "./treatments/details/visits/_components/create-dialog";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const tabs = [
   {
@@ -192,7 +193,12 @@ export default function PatientDetailsPage({ params: { id } }) {
         {isVisitsLoading ? (
           <Spinner />
         ) : isVisitsError ? (
-          error?.message ?? "Error loading vists"
+          <Card className="border border-slate-200 bg-white">
+            <div className="p-12 text-center">
+              <FileText className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+              <p className="text-lg text-slate-600">No visits recorded yet</p>
+            </div>
+          </Card>
         ) : (
           <VisitNotes visits={visits?.visits ?? []} isHeaderDetails />
         )}
