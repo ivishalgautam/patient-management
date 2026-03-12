@@ -73,7 +73,7 @@ export default function TreatmentPlanForm({
     watch,
     control,
   } = form;
-
+  console.log({ errors });
   const treatmentId = searchParams.get("tid");
 
   const { fields, append, remove } = useFieldArray({ control, name: "notes" });
@@ -110,7 +110,6 @@ export default function TreatmentPlanForm({
     setValue("affected_tooths", toothsToSet);
   };
   const onSubmit = async (data) => {
-    console.log({ data });
     const payload = {
       patient_id: patientId,
       treatment_id: treatmentId,
@@ -327,12 +326,14 @@ export default function TreatmentPlanForm({
                                     placeholder="Enter notes"
                                     // className="h"
                                   />
+
                                   {errors?.notes?.[ind]?.note && (
                                     <span className="text-sm text-red-500">
                                       {errors?.notes?.[ind]?.note?.message}
                                     </span>
                                   )}
                                 </div>
+
                                 <Button
                                   type="button"
                                   variant="destructive"
@@ -348,6 +349,11 @@ export default function TreatmentPlanForm({
                         </div>
                       )}
 
+                      {errors.notes && (
+                        <div className="text-sm text-red-500">
+                          {errors.notes.message}
+                        </div>
+                      )}
                       {type !== "view" && (
                         <Button
                           className="mt-4 h-6"

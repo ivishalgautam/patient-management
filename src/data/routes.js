@@ -188,6 +188,12 @@ export const sidebarData = [
         isVisible: false,
       },
       {
+        title: "Treatment visits",
+        url: "/patients/[id]/treatments/details/visits",
+        roles: [ROLES.DOCTOR, ROLES.STAFF],
+        isVisible: false,
+      },
+      {
         title: "Ledger",
         url: "/patients/[id]/ledgers",
         roles: [ROLES.DOCTOR, ROLES.STAFF],

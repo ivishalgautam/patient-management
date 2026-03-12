@@ -324,3 +324,38 @@ export async function updatePayment(id, data) {
   const resp = await http().put(`${endpoints.treatments.payments}/${id}`, data);
   return resp.data;
 }
+
+// visits
+export const fetchTreatmentVisits = async (searchParams) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.treatmentVisits}?${searchParams}`,
+  );
+  return data;
+};
+
+export async function createTreatmentVisit(data) {
+  const resp = await http().post(endpoints.treatments.treatmentVisits, data);
+  return resp.data;
+}
+
+export const fetchTreatmentVisit = async (id) => {
+  const { data } = await http().get(
+    `${endpoints.treatments.treatmentVisits}/${id}`,
+  );
+  return data;
+};
+
+export async function deleteTreatmentVisit(id) {
+  const { data } = await http().delete(
+    `${endpoints.treatments.treatmentVisits}/${id}`,
+  );
+  return data;
+}
+
+export async function updateTreatmentVisit(id, data) {
+  const resp = await http().put(
+    `${endpoints.treatments.treatmentVisits}/${id}`,
+    data,
+  );
+  return resp.data;
+}

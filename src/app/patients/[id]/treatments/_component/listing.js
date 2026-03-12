@@ -46,12 +46,7 @@ export default function Listing({ patientId }) {
         clinic.id,
         searchParamsStr,
       ),
-    queryKey: [
-      `treatments-${clinic.id}-${patientId}`,
-      patientId,
-      clinic,
-      searchParamsStr,
-    ],
+    queryKey: [`treatments`, patientId, clinic?.id, searchParamsStr],
     enabled: !!searchParamsStr && !!clinic?.id && !!patientId,
   });
   const {
@@ -69,7 +64,7 @@ export default function Listing({ patientId }) {
       updateTreatment(data.treatemnt_id, { status: data.status }),
     onSuccess: (data) => {
       toast.success("Updated");
-      queryClient.invalidateQueries([`treatments-${clinic.id}-${patientId}`]);
+      queryClient.invalidateQueries([`treatments`]);
       setIsModal(false);
     },
     onError: (error) => {

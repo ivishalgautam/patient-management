@@ -32,6 +32,12 @@ const patientDetailTabs = [
     icon: "/images/icons/treatment-plan.png",
     url: "treatment-plan",
   },
+  {
+    title: "Visits",
+    desc: "Check treatment visits of patient",
+    icon: "/images/icons/visit.png",
+    url: "visits",
+  },
 ];
 
 export default function TreatmentDetailsPage({ params: { id } }) {

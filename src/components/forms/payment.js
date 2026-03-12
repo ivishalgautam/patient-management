@@ -296,7 +296,7 @@ export default function PaymentForm({
             {...register("amount_paid", { valueAsNumber: true })}
             placeholder="Enter amount paid"
             disabled={isFullPayment}
-            max={remainingPayment - advanceUsed}
+            max={(remainingPayment?.remaining_amount || 0) - (advanceUsed || 0)}
           />
 
           {errors.amount_paid && (

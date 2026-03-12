@@ -51,7 +51,7 @@ export const diseases = [
     label: "Pain",
   },
   {
-    value: "#FFFF00",
+    value: "#b4b400",
     label: "Missing",
   },
 ];

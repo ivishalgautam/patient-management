@@ -8,18 +8,20 @@ import { Large, Muted } from "@/components/ui/typography";
 import { rupee } from "@/lib/Intl";
 import { cn } from "@/lib/utils";
 import { fetchLedgerByClinicAndPatient } from "@/server/ledger";
-import {
-  fetchPatient,
-  getPatientDetailsByPatientAndClinicId,
-} from "@/server/patient";
-import { fetchTreatment } from "@/server/treatment";
+import { getPatientDetailsByPatientAndClinicId } from "@/server/patient";
+import { fetchTreatmentVisits } from "@/server/treatment";
 import { ClinicContext } from "@/store/clinic-context";
 import { ExaminationContext } from "@/store/examination-context";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import VisitNotes from "./treatments/details/visits/_components/visit-notes";
+import Spinner from "@/components/Spinner";
+import { CreateDialog } from "./treatments/details/visits/_components/create-dialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const tabs = [
   {
@@ -68,6 +70,7 @@ const tabs = [
 
 export default function PatientDetailsPage({ params: { id } }) {
   const { clinic } = useContext(ClinicContext);
+  const [isVisitCreateOpen, setIsVisitCreateOpen] = useState(false);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [`treatment-${id}-${clinic.id}`],
     queryFn: () => getPatientDetailsByPatientAndClinicId(id, clinic.id),
@@ -91,6 +94,17 @@ export default function PatientDetailsPage({ params: { id } }) {
     enabled: !!id && !!clinic?.id,
   });
 
+  const {
+    data: visits,
+    isLoading: isVisitsLoading,
+    isError: isVisitsError,
+    error: visitsError,
+  } = useQuery({
+    queryKey: [`treatment-visits`],
+    queryFn: () => fetchTreatmentVisits(`patients=${id}`),
+    enabled: !!id,
+  });
+
   if (isError) return error?.message ?? "error";
 
   return (
@@ -106,7 +120,7 @@ export default function PatientDetailsPage({ params: { id } }) {
               width={100}
               height={100}
               alt={data?.fullname}
-              className={"rounded-lg shadow-md"}
+              className={"aspect-square rounded-lg shadow-md"}
             />
           </div>
           <div className="grid grid-cols-2 gap-y-2">
@@ -160,6 +174,37 @@ export default function PatientDetailsPage({ params: { id } }) {
             />
           ))}
       </div>
+
+      <div className="mt-10 space-y-2">
+        <div className="flex items-center justify-between">
+          <Heading
+            title={"Patient visits"}
+            description={"All Patient visits"}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsVisitCreateOpen(true)}
+          >
+            <Plus /> Create visit
+          </Button>
+        </div>
+        {isVisitsLoading ? (
+          <Spinner />
+        ) : isVisitsError ? (
+          error?.message ?? "Error loading vists"
+        ) : (
+          <VisitNotes visits={visits?.visits ?? []} isHeaderDetails />
+        )}
+      </div>
+
+      <CreateDialog
+        {...{
+          isOpen: isVisitCreateOpen,
+          setIsOpen: setIsVisitCreateOpen,
+          patientId: id,
+        }}
+      />
     </PageContainer>
   );
 }

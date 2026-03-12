@@ -50,6 +50,7 @@ export default function TreatmentCard({ treatment, handleStatusChange }) {
               defaultValue={treatment.status}
               onValueChange={(value) => handleStatusChange(treatment.id, value)}
               disabled={treatment.status === "close"}
+              vlaue={treatment.status}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue />
