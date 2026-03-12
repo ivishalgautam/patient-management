@@ -20,7 +20,7 @@ export default async function TreatmentPlan({ searchParams, params: { id } }) {
         description={"Manage Visits (Create, Update, Delete)."}
       />
 
-      <TableActions />
+      {/* <TableActions /> */}
 
       <Suspense
         key={key}
