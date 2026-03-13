@@ -13,8 +13,8 @@ export function CreateDialog({ isOpen, setIsOpen, patientId, treatmentId }) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create payment.</DialogTitle>
-            <DialogDescription>You can create a payment.</DialogDescription>
+            <DialogTitle>Create visit.</DialogTitle>
+            <DialogDescription>You can create a visit.</DialogDescription>
           </DialogHeader>
           <TreatmentVisitForm
             patientId={patientId}
