@@ -20,6 +20,11 @@ export const fetchLedgerByClinicAndPatient = async (clinicId, patientId) => {
   return data;
 };
 
+export const fetchLedgerEntry = async (id) => {
+  const { data } = await http().get(`${endpoints.ledgers.getAll}/${id}`);
+  return data;
+};
+
 export const deleteLedger = async (id) => {
   return await http().delete(`${endpoints.ledgers.getAll}/${id}`);
 };
