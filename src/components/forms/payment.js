@@ -94,7 +94,7 @@ export default function PaymentForm({
       treatmentId,
       isFullPayment,
     ],
-    enabled: (!!selectedTreatment || !!treatmentId) && isFullPayment,
+    enabled: !!selectedTreatment || !!treatmentId,
   });
 
   /* ---------------- create mutation ---------------- */
