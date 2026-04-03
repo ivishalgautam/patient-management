@@ -50,6 +50,7 @@ export default function BookSlotPage() {
           slots={slot?.slots ?? []}
           clinic={clinic}
           handleCreate={handleCreate}
+          createMutation={createMutation}
         />
       </div>
     </PageContainer>

@@ -18,7 +18,12 @@ import { fetchFormattedServices } from "@/server/service";
 import { cn } from "@/lib/utils";
 import { searchPatients } from "@/server/users";
 
-export default function BookSlotForm({ slots, clinic, handleCreate }) {
+export default function BookSlotForm({
+  slots,
+  clinic,
+  handleCreate,
+  createMutation,
+}) {
   const {
     register,
     control,
@@ -235,7 +240,7 @@ export default function BookSlotForm({ slots, clinic, handleCreate }) {
       </div>
       {!isDateBlocked() && (
         <div className="text-end">
-          <Button>Submit</Button>
+          <Button disabled={createMutation?.isLoading}>Submit</Button>
         </div>
       )}
     </form>
