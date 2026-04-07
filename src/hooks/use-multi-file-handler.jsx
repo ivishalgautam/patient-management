@@ -42,7 +42,7 @@ const useMultiFileHandler = (key) => {
 
   const deleteFile = async (filePath) => {
     try {
-      const deleteUrl = `${process.env.NEXT_PUBLIC_DRDIPTI_API_URL}${endpoints.files.getFiles}?file_path=${filePath}`;
+      const deleteUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoints.files.getFiles}?file_path=${filePath}`;
       await axios.delete(deleteUrl);
 
       setImages((prev) => prev.filter((image) => image !== filePath));

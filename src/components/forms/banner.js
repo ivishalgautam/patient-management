@@ -112,7 +112,7 @@ export default function BannerForm({
                   <figure className="relative size-64">
                     {watch("type") === "banner" ? (
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
                         width={200}
                         height={200}
                         alt="image"
@@ -124,7 +124,7 @@ export default function BannerForm({
                       />
                     ) : (
                       <video
-                        src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
                         controls
                         width={640}
                         height={480}

@@ -138,7 +138,7 @@ export default function UserForm({
                 {image ? (
                   <figure className="relative size-32">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_DRDIPTI_IMAGE_DOMAIN}/${image}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}/${image}`}
                       width={500}
                       height={500}
                       alt="image"
