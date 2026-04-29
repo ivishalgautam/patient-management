@@ -59,24 +59,14 @@ export const patientUpdateSchema = z
       message: "Role is required.",
     }),
     avatar: z.string().optional(),
-    blood_group: z
-      .string({ required_error: "Blood group is required." })
-      .min(1, { message: "Blood group is required." }),
+    blood_group: z.string().optional().nullable(),
     marital_status: z.enum(["single", "married", ""], {
       required_error: "Marital status is required.",
     }),
-    height_in_cm: z
-      .string({ required_error: "Height is required." })
-      .min(1, { message: "Height is required." }),
-    emergency_contact: z.string({
-      required_error: "Emergency contact is required.",
-    }),
+    height_in_cm: z.string().optional().nullable(),
+    emergency_contact: z.string().optional().nullable(),
   })
   .refine((data) => isValidPhoneNumber(data.mobile_number), {
     path: ["mobile_number"],
-    message: "Invalid phone number",
-  })
-  .refine((data) => isValidPhoneNumber(data.emergency_contact), {
-    path: ["emergency_contact"],
     message: "Invalid phone number",
   });
